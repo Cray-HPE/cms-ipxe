@@ -117,8 +117,8 @@ ipxe:
   # Overall time incurred on network miss depends on dhcp configuration on the
   # network attached to the NICs, but is about 10 seconds per failed network try.
   nic_boot_order:
-  - net2
   - net0
+  - net2
   - net1
   - net3
   - net4
