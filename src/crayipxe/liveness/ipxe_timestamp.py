@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Hewlett Packard Enterprise Development LP
+# Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -136,7 +136,7 @@ class ipxeTimestamp(object):
                 data = json.load(timestamp_file)
                 return datetime.datetime.fromtimestamp(float(data['timestamp']))
         except FileNotFoundError:
-            LOGGER.warning("Timestamp never intialized to '%s'" % (self.path))
+            LOGGER.warning("Timestamp never initialized to '%s'" % (self.path))
             return datetime.datetime.fromtimestamp(0)
 
     def delete(self):
