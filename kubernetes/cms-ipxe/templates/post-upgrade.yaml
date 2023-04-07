@@ -48,7 +48,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: cms-ipxe-migration
-        image: "artifactory.algol60.net/csm-docker/stable/cray-bss-ipxe:{{ .Chart.AppVersion }}"
+        image: "{{ .Values.post_upgrade.image.repository }}:{{ .Chart.AppVersion }}"
         command:
         - '/bin/sh'
         - '-c'

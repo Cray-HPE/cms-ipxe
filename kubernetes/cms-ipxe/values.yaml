@@ -156,3 +156,7 @@ ipxe:
   # to 'undionly.kpxe' and the debug binary name to 'debug-undionly.kpxe'.
   cray_ipxe_build_arch: x86_64
   cray_ipxe_build_kind: efi
+
+post_upgrade:
+  image:
+    repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
