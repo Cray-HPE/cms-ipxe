@@ -7,19 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.2] - 2023-04-14
+
 ### Fixed
+
 - Make the build architecture and kind configurable to allow use on platforms that require KPXE binaries.
 
 ### Changed
+
 - Spelling corrections.
 - Enabled building of unstable artifacts
 - Updated header of update_versions.conf to reflect new tool options
 
 ### Fixed
+
 - Update Chart with correct image and chart version strings during builds.
 
 ## [1.11.1] - 2022-12-20
+
 ### Added
+
 - Add Artifactory authentication to Jenkinsfile
 
 ## [1.11.0] - 20222-08-10
