@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2019-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -284,7 +284,7 @@ def token_expiring_soon(bearer_token, min_remaining_valid_time):
         return True
 
     # Just decode the token to extract the value.  THe token has already been
-    # obtianed from Keycloak here and verification gets handled
+    # obtained from Keycloak here and verification gets handled
     # by the API GW when the token is checked.
     tokenMap = None
     try:
@@ -458,12 +458,17 @@ def main():
             bearer_token_changed = True
             bearer_token = bearer_token_new
 
-            # Touch the relevent source to force a recompile.
+            # Touch the relevant source to force a recompile.
             os.utime('/ipxe/net/tcp/httpcore.c', None)
 
         # ipxe script setting
         bss_script_raw = api_instance.read_namespaced_config_map('cray-ipxe-bss-ipxe', 'services')
         bss_script_new = bss_script_raw.data['bss.ipxe']
+
+        # ipxe binary type and architecture settings...
+        build_arch = settings.get('cray_ipxe_build_arch', 'x86_64')
+        build_kind = settings.get('cray_ipxe_build_kind', 'efi')
+
         if bss_script_new != bss_script:
             bss_script_changed = True
             bss_script = bss_script_new
@@ -472,7 +477,7 @@ def main():
 
         if any([settings_changed, ca_public_key_changed, bss_script_changed,
                 bearer_token_changed]):
-            # Create a file to indicate the build is in progress. A Kuberenetes
+            # Create a file to indicate the build is in progress. A Kubernetes
             # livenessProbe can check on this file to see if it has stayed around
             # longer than expected, which would indicate a build failure.
             ipxe_timestamp = ipxeTimestamp(IPXE_PATH, os.getenv('IPXE_BUILD_TIME_LIMIT', 40))
@@ -480,7 +485,8 @@ def main():
             new_ipxe_binary = create_binaries(api_instance, ipxe_binary_name, bss_script, cert=public_cert,
                                               bearer_token=bearer_token,
                                               ipxe_build_debug=ipxe_build_debug,
-                                              ipxe_build_debug_level=cray_ipxe_debug_level)
+                                              ipxe_build_debug_level=cray_ipxe_debug_level,
+                                              arch=build_arch, kind=build_kind)
 
             if not ipxe_binary == new_ipxe_binary:
                 if ipxe_binary and os.path.exists(ipxe_binary):
@@ -504,7 +510,7 @@ def main():
             shell_script = shell_script_new
         if any([settings_changed, ca_public_key_changed, shell_script_changed,
                 bearer_token_changed]):
-            # Create a file to indicate the build is in progress. A Kuberenetes
+            # Create a file to indicate the build is in progress. A Kubernetes
             # livenessProbe can check on this file to see if it has stayed around
             # longer than expected, which would indicate a build failure.
             debug_ipxe_timestamp = ipxeTimestamp(DEBUG_IPXE_PATH,
@@ -514,7 +520,8 @@ def main():
                                                     cert=public_cert,
                                                     bearer_token=bearer_token,
                                                     ipxe_build_debug=ipxe_build_debug,
-                                                    ipxe_build_debug_level=cray_ipxe_debug_level)
+                                                    ipxe_build_debug_level=cray_ipxe_debug_level,
+                                                    arch=build_arch, kind=build_kind)
 
             # The upgrade to cms-ipxe 1.10.0 changed the default name, potentially leaving an old file
             # This file still contains a valid token and should be cleaned up if not in use
