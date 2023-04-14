@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -147,3 +147,16 @@ ipxe:
 
   cray_ipxe_binary_name: ipxe.efi
   cray_ipxe_debug_binary_name: debug-ipxe.efi
+
+  # Allow specification of an architecture other than x86_64 and a kind other than
+  # EFI.  Currently, the only supported architecture is 'x86_64' and the supported
+  # kinds are 'efi' and 'kpxe'.
+  #
+  # If you set the kind to 'kpxe' here, you also want to set the binary name (above)
+  # to 'undionly.kpxe' and the debug binary name to 'debug-undionly.kpxe'.
+  cray_ipxe_build_arch: x86_64
+  cray_ipxe_build_kind: efi
+
+post_upgrade:
+  image:
+    repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe

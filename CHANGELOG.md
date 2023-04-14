@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Make the build architecture and kind configurable to allow use on platforms that require KPXE binaries.
+
 ### Changed
 - Spelling corrections.
 - Enabled building of unstable artifacts
