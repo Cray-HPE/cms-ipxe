@@ -175,6 +175,8 @@ def create_binaries(api_instance, fname, script, cert=None, arch='x86_64', kind=
             certfile.write(cert)
         build_command.append('CERT=%s' % (os.path.basename(cert_path)))
         build_command.append('TRUST=%s' % (os.path.basename(cert_path)))
+        # ERIC TEMPORARY -- NEED TO MAKE THIS CONFIGURABLE
+        build_command.append('CONFIG=cloud')
 
         # Modify the configuration file to enable the HTTPS protocol in our build
         config_file = "/ipxe/config/general.h"
