@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -29,21 +29,21 @@
 # for downloading ipxe binaries from a secure location. The ipxe binaries
 # themselves need to be dynamically recreated whenever the public CA cert
 # changes.
-FROM artifactory.algol60.net/csm-docker/stable/cray-tpsw-ipxe:@CRAY-TPSW-IPXE-VERSION@ as base
+ARG Upstream=artifactory.algol60.net
+ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
+ARG IpxeTag=3.0.0
+ARG Stable=stable
+FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
 RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt requirements_test.txt constraints.txt /app/
-
-RUN apk --update upgrade --no-cache && \
-    apk add \
-      gcc \
+RUN apt -y update && \
+    apt -y install \
       python3-dev \
-      libc-dev \
-      py3-pip openssl coreutils && \
+      python3-pip openssl coreutils && \
     python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir -r /app/requirements.txt
 RUN echo 'alias ll="ls -l"' > ~/.bashrc
-RUN chown 65534:65534 -R /ipxe
+# RUN chown 65534:65534 -R /ipxe
 COPY /src/crayipxe /app/crayipxe
-USER nobody:nobody
-CMD ["/usr/bin/python3", "-m", "crayipxe.service"]
+# USER 65534:65534 -- Temporary, to allow on-system modification of content

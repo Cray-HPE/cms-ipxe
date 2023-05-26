@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 #
 # MIT License
 #
-# (C) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2019-2023 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -22,25 +23,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 #
 
-import os
-import logging
 
-LOGGER = logging.getLogger(__name__)
-IPXE_BUILD_DIR = '/ipxe'
+import sys
+from kubernetes import client, config
+# Load Configuration and indicate initial health
+try:
+    config.load_incluster_config()
+except Exception:
+    sys.exit("This application must be run within the k8s cluster.")
 
-# Format logs and set the requested log level.
-log_format = "%(asctime)-15s - %(levelname)-7s - %(name)s - %(message)s"
-requested_log_level = os.environ.get('LOG_LEVEL', 'INFO')
-log_level = logging.getLevelName(requested_log_level)
-
-bad_log_level = None
-if type(log_level) != int:
-    bad_log_level = requested_log_level
-    log_level = logging.INFO
-
-logging.basicConfig(level=log_level, format=log_format)
-if bad_log_level:
-    LOGGER.warning('Log level %r is not valid. Falling back to INFO',
-                   bad_log_level)
-
-
+api_instance = client.CoreV1Api()

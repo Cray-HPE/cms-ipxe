@@ -46,22 +46,20 @@ import sys
 import tempfile
 import time
 from urllib.parse import urlparse
-
 import jwt
 import oauthlib.oauth2
 import requests_oauthlib
-from crayipxe.liveness.ipxe_timestamp import ipxeTimestamp, IPXE_PATH, DEBUG_IPXE_PATH
-from kubernetes import client, config
 from yaml import safe_load, safe_dump
 
-IPXE_BUILD_DIR = '/ipxe'
+from crayipxe.liveness.ipxe_timestamp import ipxeTimestamp, IPXE_PATH, DEBUG_IPXE_PATH
+from crayipxe import IPXE_BUILD_DIR
+
+from .k8s_client import api_instance, client
+
+
 TFTP_MOUNT_DIR = '/shared_tftp'
 TOKEN_HOST = "api-gw-service-nmn.local"  # default in case it is not in the settings configmap
 LOGGER = logging.getLogger(__name__)
-
-CRAY_IPXE_SETTINGS_CONFIGMAP_NAME = 'cray-ipxe-settings'
-CRAY_IPXE_SETTINGS_CONFIGMAP_NAMESPACE = 'services'
-CRAY_IPXE_SETTINGS_CONFIGMAP_SETTINGS_YAML = 'settings.yaml'
 
 # These iPxe debug settings are enabled in normal builds because they provide
 # useful info (i.e: BIOS timme and basic http info).
@@ -144,7 +142,7 @@ def create_binaries(api_instance, fname, script, cert=None, arch='x86_64', kind=
     except KeyError:
         raise Exception("Unsupported build type: arch '%s' of kind '%s'." % (arch, kind))
 
-    # Determine the S3 host name and pass this to the iPxe build.  If the hostname
+    # Determine the S3 host name and pass this to the iPXE build.  If the hostname
     # can not be determined then the default value for S3_HOST will be used as
     # defined in the ipxe makefile.
     try:
@@ -176,15 +174,6 @@ def create_binaries(api_instance, fname, script, cert=None, arch='x86_64', kind=
         build_command.append('CERT=%s' % (os.path.basename(cert_path)))
         build_command.append('TRUST=%s' % (os.path.basename(cert_path)))
 
-        # Modify the configuration file to enable the HTTPS protocol in our build
-        config_file = "/ipxe/config/general.h"
-        tfile_original = tempfile.NamedTemporaryFile(suffix='_original', delete=False)
-        shutil.copyfile(config_file, tfile_original.name)
-        with open(config_file, "w") as fout:
-            for line in fileinput.input([tfile_original.name]):
-                fout.write(re.sub('#undef[ \t]+DOWNLOAD_PROTO_HTTPS',
-                                  '#define DOWNLOAD_PROTO_HTTPS', line))
-
     # Write our build script to disk in a unique filename
     tfile = tempfile.NamedTemporaryFile(suffix='_script', dir=IPXE_BUILD_DIR, delete=False)
     with open(tfile.name, 'w') as ntf:
@@ -204,119 +193,16 @@ def create_binaries(api_instance, fname, script, cert=None, arch='x86_64', kind=
     # Move binary into place
     shutil.move(build_dest, product_dest)
 
-    # Finally, we can remove the script we wrote to the build directory
+    # Finally, we can remove all temporary build artifacts from the build directory
     os.unlink(script_path)
     if cert:
         os.unlink(cert_path)
-        shutil.copyfile(tfile_original.name, config_file)
-        os.unlink(tfile_original.name)
 
     LOGGER.info("Newly created ipxe binary created: '%s'" % (product_dest))
     return product_dest
 
 
-def fetch_token(token_host):
-    # The token will be fetched from Keycloak using the client id and secret
-    # from the mounted Kubernetes secret.
-    token_url = "https://%s/keycloak/realms/shasta/protocol/openid-connect/token" % token_host
-    auth_user_file = "/client_auth/client-id"
-    auth_secret_file = "/client_auth/client-secret"
-    oauth_client_id = ""
-    oauth_client_secret = ""
-    f = None
-    try:
-        f = open(auth_user_file, 'r')
-        oauth_client_id = f.readline().rstrip()
-    except IOError:
-        LOGGER.error("Unable to read user name from %s", auth_user_file)
-        return None
-    finally:
-        if f:
-            f.close()
-            f = None
-    try:
-        f = open(auth_secret_file, 'r')
-        oauth_client_secret = f.readline().rstrip()
-    except IOError:
-        LOGGER.error("Unable to read secret from %s", auth_secret_file)
-        return None
-    finally:
-        if f:
-            f.close()
-            f = None
 
-    oauth_client = oauthlib.oauth2.BackendApplicationClient(
-        client_id=oauth_client_id)
-
-    session = requests_oauthlib.OAuth2Session(
-        client=oauth_client, auto_refresh_url=token_url,
-        auto_refresh_kwargs={
-            'client_id': oauth_client_id,
-            'client_secret': oauth_client_secret,
-        },
-        token_updater=lambda t: None)
-
-    # Set the CA Cert file location so that we can use TLS to talk with Keycloak.
-    # This certificate is mounted from an existing configmap.
-    session.verify = "/ca_public_key/certificate_authority.crt"
-
-    token = session.fetch_token(token_url=token_url, client_id=oauth_client_id,
-                                client_secret=oauth_client_secret, timeout=500)
-
-    access_token = None
-    if token:
-        access_token = token.get("access_token")
-        if (access_token is not None):
-            LOGGER.debug("Got access_token %s", access_token)
-            return access_token
-        else:
-            LOGGER.error("Unable to get an access_token for client %s",
-                         oauth_client_id)
-            return None
-    else:
-        LOGGER.error("Unable to get a token object for client %s",
-                     oauth_client_id)
-        return None
-
-
-def token_expiring_soon(bearer_token, min_remaining_valid_time):
-    if bearer_token is None:
-        return True
-
-    # Just decode the token to extract the value.  THe token has already been
-    # obtained from Keycloak here and verification gets handled
-    # by the API GW when the token is checked.
-    tokenMap = None
-    try:
-        tokenMap = jwt.decode(bearer_token,
-                              options={"verify_signature": False})
-    except Exception as ex:
-        LOGGER.error("Unable to decode JWT.  Error was %s", ex)
-        return True
-
-    # Grab the expiration time
-    tokenExp = tokenMap.get('exp')
-    LOGGER.debug("JWT expiration time=%s" % tokenExp)
-
-    if tokenExp is None:
-        LOGGER.error("Unable to extract the expiration 'exp' from the JWT.")
-        return True
-
-    # If the current time is at or beyond the token expiration minus an
-    # additional buffer time (to allow for a successful boot if used now)
-    # then consider this token expiration time too close to expiration
-    # and signal that we should request a new token.  The buffer time is
-    # configurable but a default is provided if needed.
-    tnow = int(time.time())
-    tmax = tokenExp - min_remaining_valid_time
-    LOGGER.debug("tnow=%s tmax=%s" % (tnow, tmax))
-    if tnow >= tmax:
-        LOGGER.debug("Detected that JWT will expire soon and needs updating.")
-        return True
-    else:
-        LOGGER.debug("""The current JWT expiration time is acceptable. \
-A new JWT will not be requested.""")
-        return False
 
 
 def read_ipxe_config(api_instance):
@@ -341,14 +227,6 @@ def update_ipxe_config_binaries(api_instance, ipxe_binary_name, ipxe_debug_binar
 
 
 def main():
-    # Load Configuration and indicate initial health
-    try:
-        config.load_incluster_config()
-    except Exception:
-        sys.exit("This application must be run within the k8s cluster.")
-
-    api_instance = client.CoreV1Api()
-
     # Initialize watched variables to none
     settings = None
     bss_script = None
@@ -360,21 +238,6 @@ def main():
 
     # Create a graceful exit semaphore
     run_context = GracefulExit(cleanup)
-
-    # Patch the ipxe code after saving off the original first
-    # This is patch is necessary, so that ipxe will handle the '+'
-    # as part of a URI query.
-    # Reference: http://lists.ipxe.org/pipermail/ipxe-devel/2015-May/004200.html
-    uri_file = "/ipxe/core/uri.c"
-    copy_file = "/ipxe/core/uri.original.c"
-    try:
-        shutil.copyfile(uri_file, copy_file)
-    except shutil.Error:
-        LOGGER.error("FAILED attempting to copy {} to {}".format(uri_file, copy_file))
-        raise
-    with open(uri_file, "w") as fout:
-        for line in fileinput.input([copy_file]):
-            fout.write(re.sub(r'^(\s*\[URI_QUERY\]\s*=\s*"#:@\?.*)("\s*,.*\n)', r'\1+\2', line))
 
     # Indefinitely monitor and respond to changes in our configuration
     LOGGER.info("Monitoring associated configmaps for related changes...")
@@ -560,21 +423,4 @@ def main():
 
 
 if __name__ == '__main__':
-    # Format logs and set the requested log level.
-    log_format = "%(asctime)-15s - %(levelname)-7s - %(name)s - %(message)s"
-    requested_log_level = os.environ.get('LOG_LEVEL', 'INFO')
-    log_level = logging.getLevelName(requested_log_level)
-
-    bad_log_level = None
-    if type(log_level) != int:
-        bad_log_level = requested_log_level
-        log_level = logging.INFO
-
-    logging.basicConfig(level=log_level, format=log_format)
-    if bad_log_level:
-        LOGGER.warning('Log level %r is not valid. Falling back to INFO',
-                       bad_log_level)
-
-    LOGGER.info("Cray IPXE builder Initializing...")
-    os.chdir(IPXE_BUILD_DIR)
     main()

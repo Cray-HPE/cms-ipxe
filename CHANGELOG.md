@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added support to allow two seperate containers, one for aarch64 and one for x86-64
+- Added aarch64 specific control variables and configmaps for aarch64 builds
+- Added builder log level settings in global configmap
+### Changed
+- Refactored liveness code to account for unified source of liveness information
+- Threaded livevess probe heartbeat to detect failed containers
+- Refactored crayipxe/service.py into new multitarchitecture entrant builds into crayupxe/builder.py
+### Removed
+- Deprecated configuration variables with no viable or used method for configuration
 
 ## [1.11.2] - 2023-04-14
 
