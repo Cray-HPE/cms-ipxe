@@ -44,6 +44,6 @@ RUN apt -y update && \
     python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir -r /app/requirements.txt
 RUN echo 'alias ll="ls -l"' > ~/.bashrc
-# RUN chown 65534:65534 -R /ipxe
+RUN chown 65534:65534 -R /ipxe
 COPY /src/crayipxe /app/crayipxe
-# USER 65534:65534 -- Temporary, to allow on-system modification of content
+USER 65534:65534
