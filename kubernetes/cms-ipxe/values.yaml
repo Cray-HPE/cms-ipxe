@@ -70,38 +70,6 @@ cray-service:
           - crayipxe.liveness
         initialDelaySeconds: 40
         periodSeconds: 40
-    cray-ipxe-aarch64:
-      name: cray-ipxe-builder-aarch64
-      image:
-        repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
-      command:
-        - python3
-        - "-m"
-        - "crayipxe.builds.aarch64"
-      volumeMounts:
-      - name: cray-tftp-data
-        mountPath: /shared_tftp
-        subPath: tftp
-      - name: client-auth
-        mountPath: /client_auth
-        readOnly: true
-      - name: ca-public-key
-        mountPath: /ca_public_key
-      env:
-      - name: LOG_LEVEL
-        value: INFO
-      - name: IPXE_BUILD_TIME_LIMIT
-        value: "40"
-      - name: DEBUG_IPXE_BUILD_TIME_LIMIT
-        value: "120"
-      livenessProbe:
-        exec:
-          command:
-          - python3
-          - "-m"
-          - crayipxe.liveness
-        initialDelaySeconds: 40
-        periodSeconds: 40
   volumes:
     cray-tftp-data:
       name: cray-tftp-data
@@ -196,22 +164,12 @@ builderDefaults:
 
 
 builders:
-  x86-64:
-    Values:
-      nameOverride: cray-ipxe-x86-builder
-      fullnameOverride: cray-ipxe-x86-builder
-      containers:
-        operator:
-          command:
-          - python3
-          - "-m"
-          - "crayipxe.builds.x86-64"
   aarch-64:
     Values:
       nameOverride: cray-ipxe-aarch64-builder
       fullnameOverride: cray-ipxe-aarch64-builder
       containers:
-        operator:
+        cray-ipxe:
           command:
             - python3
             - "-m"
