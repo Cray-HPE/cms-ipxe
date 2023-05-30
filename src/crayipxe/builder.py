@@ -125,8 +125,7 @@ class BinaryBuilder(object):
                 self._global_settings = None
                 self._global_settings_timestamp = None
         if not self._global_settings:
-            self._global_settings = safe_load(
-                api_instance.read_namespaced_config_map(self.global_settings_configmap_name, self.namespace).data)
+            self._global_settings = api_instance.read_namespaced_config_map(self.global_settings_configmap_name, self.namespace).data
             self._global_settings_timestamp = time.time()
         if local_settings != self.global_settings:
             # Either this is the first time we've accessed the global settings, or the settings have changed.
