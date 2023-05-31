@@ -33,6 +33,7 @@
 cray-service:
   type: Deployment
   nameOverride: cray-ipxe
+  fullnameOverride: cray-ipxe
   serviceAccountName: cray-ipxe
   priorityClassName: csm-high-priority-service
   replicaCount: 1
@@ -157,7 +158,6 @@ ipxe:
 post_upgrade:
   image:
     repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
-
 
 deploymentDefaults:
   service:

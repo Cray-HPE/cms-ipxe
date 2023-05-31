@@ -395,7 +395,7 @@ class BinaryBuilder(object):
         """
         The full absolute path to where the published binary will reside.
         """
-        destination = os.path.join(self.PUBLISHING_DIR, self.global_settings.get('BINARY_NAME_TAG'))
+        destination = os.path.join(self.PUBLISHING_DIR, self.binary_name)
         assert destination is not None
         return destination
 
@@ -404,7 +404,7 @@ class BinaryBuilder(object):
         """
         The full absolute path to where the published debug binary will reside.
         """
-        destination = os.path.join(self.PUBLISHING_DIR, self.global_settings.get('DEBUG_BINARY_NAME_TAG'))
+        destination = os.path.join(self.PUBLISHING_DIR, self.debug_binary_name)
         assert destination is not None
         return destination
 
