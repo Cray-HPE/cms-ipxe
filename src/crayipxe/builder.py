@@ -336,6 +336,7 @@ class BinaryBuilder(object):
         """
         environment = os.environ.copy()
         build_command = ['make']
+        build_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
         build_command.extend(self.MAKE_ADDENDUM)
         build_command.append('DEBUG=%s' % ','.join(self._build_options))
@@ -365,6 +366,7 @@ class BinaryBuilder(object):
         """
         environment = os.environ.copy()
         debug_command = ['make']
+        debug_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
         debug_command.extend(self.MAKE_ADDENDUM)
         debug_command.append('DEBUG=%s' % ','.join(self._build_debug_options))
