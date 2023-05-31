@@ -44,6 +44,7 @@ deploymentDefaults:
   replicaCount: 1
 
 builderDefaults:
+  serviceAccountName: cray-ipxe
   containers:
     builder:
       name: cray-ipxe

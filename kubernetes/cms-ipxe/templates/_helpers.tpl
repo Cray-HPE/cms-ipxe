@@ -1,7 +1,6 @@
 {{- define "cray-ipxe.deployment" -}}
 apiVersion: apps/v1
 kind: Deployment
-serviceAccountName: cray-ipxe
 metadata:
   name: {{ include "cray-service.fullname" . }}
   labels:
