@@ -159,15 +159,23 @@ post_upgrade:
   image:
     repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
 
+
+deploymentDefaults:
+  service:
+    enabled: False
+  sqlCluster:
+    enabled: False
+  global:
+    chart:
+      name: cms-ipxe
+  initContainers: []
+  kafkaCluster:
+    enabled: False
+
 builderDefaults:
-  deploymentDefaults:
-    service:
-      enabled: False
-    sqlCluster:
-      enabled: False
-    global:
-      chart:
-        name: cms-ipxe
+  containers:
+    cray-ipxe:
+      name: cray-ipxe
 
 builders:
   aarch-64:
