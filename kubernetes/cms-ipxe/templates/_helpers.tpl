@@ -1,7 +1,6 @@
 {{- define "cray-ipxe.deployment" -}}
 apiVersion: apps/v1
 kind: Deployment
-priorityClassName: csm-high-priority-service
 metadata:
   name: {{ include "cray-service.fullname" . }}
   labels:
