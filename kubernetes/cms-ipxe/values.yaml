@@ -108,7 +108,7 @@ builders:
           command:
             - python3
             - "-m"
-            - "crayipxe.builds.aarch64"
+            - "crayipxe.builds.x86-64"
 
 ipxe:
   name: cray-ipxe
