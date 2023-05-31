@@ -73,7 +73,6 @@ builderDefaults:
             - crayipxe.liveness
         initialDelaySeconds: 40
         periodSeconds: 40
-  priorityClassName: csm-high-priority-service
   volumes:
     cray-tftp-data:
       name: cray-tftp-data
