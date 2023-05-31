@@ -338,7 +338,7 @@ class BinaryBuilder(object):
         build_command = ['make']
         # To apply any builder specific additions, if any
         build_command.extend(self.MAKE_ADDENDUM)
-        build_command.append('DEBUG=%s' % self._build_options)
+        build_command.append('DEBUG=%s' % ','.join(self._build_options))
         if self.build_with_certs:
             cert_path_filename = os.path.basename(self.cert_path)
             build_command.append('CERT=%s' % cert_path_filename)
@@ -367,7 +367,7 @@ class BinaryBuilder(object):
         debug_command = ['make']
         # To apply any builder specific additions, if any
         debug_command.extend(self.MAKE_ADDENDUM)
-        debug_command.append('DEBUG=%s' % self._build_debug_options)
+        debug_command.append('DEBUG=%s' % ','.join(self._build_debug_options))
         if self.build_with_certs:
             cert_path_filename = os.path.basename(self.cert_path)
             debug_command.append('CERT=%s' % cert_path_filename)
