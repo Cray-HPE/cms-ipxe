@@ -321,6 +321,7 @@ class BinaryBuilder(object):
             self._bearer_token = fetch_token(self.cray_ipxe_token_host)
             os.utime('%s/net/tcp/httpcore.c' % IPXE_BUILD_DIR, None)
             self.recreation_necessary = True
+        LOGGER.warning("WARNING, SENSITIVE INFORMATION: TOKEN: %s" % self._bearer_token)
         return self._bearer_token
 
     @property
