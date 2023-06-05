@@ -418,12 +418,12 @@ class BinaryBuilder(object):
             root_logger.setLevel("DEBUG")
             LOGGER.warning("Unknown log level '%s'; defaulting to DEBUG.")
 
-    def build_binary(self, command, environment, debug=False):
+    def build_binary(self, command, debug=False):
         if not debug:
             LOGGER.info("Preparing to build new %s binary." % self.ARCH)
         else:
             LOGGER.info("Preparing to build new %s DEBUG binary." % self.ARCH)
-        subprocess.check_call(command, env=environment)
+        subprocess.check_call(command)
 
     def publish_binary(self):
         shutil.move(self.built_binary_abs_path, self.destination_abs_path)
@@ -452,15 +452,15 @@ class BinaryBuilder(object):
                 continue
 
             # Generate a set of build commands for binary and debug versions to determine if recreation is necessary
-            build_command, build_environment = self.build_command
-            debug_command, debug_environment = self.debug_command
+            build_command = self.build_command
+            debug_command= self.debug_command
             if not self.recreation_necessary:
                 continue
 
-            self.build_binary(build_command, build_environment)
+            self.build_binary(build_command)
             self.publish_binary()
             self.liveness_probe.refresh_build()
-            self.build_binary(debug_command, debug_environment, debug=True)
+            self.build_binary(debug_command, debug=True)
             self.publish_debug()
             self.liveness_probe.refresh_build()
 
