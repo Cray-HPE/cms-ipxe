@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added builder log level settings in global configmap
 ### Changed
 - Refactored liveness code to account for unified source of liveness information
-- Threaded livevess probe heartbeat to detect failed containers
-- Refactored crayipxe/service.py into new multitarchitecture entrant builds into crayupxe/builder.py
+- Threaded liveness probe heartbeat to detect failed containers
+- Refactored crayipxe/service.py into new multitarchitecture entrant builds into crayipxe/builder.py
 ### Removed
 - Deprecated configuration variables with no viable or used method for configuration
 

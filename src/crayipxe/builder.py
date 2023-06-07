@@ -65,7 +65,7 @@ class BinaryBuilder(object):
     # Additional flags to pass in to Make
     MAKE_ADDENDUM = []
 
-    # The typical period of time we wait between checks to see if we need to rebuild
+    # The typical period of time we wait between checks to see if we need to rebuild (in seconds)
     TIME_BETWEEN_BUILDCHECKS = 60
 
     def __init__(self):
