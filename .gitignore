@@ -3,3 +3,5 @@
 /.pydevproject
 /.venv
 /testdeploy.retry
+kubernetes/.packaged/
+**/*__pycache__*
