@@ -31,6 +31,7 @@ import subprocess
 from yaml import safe_load
 from tempfile import NamedTemporaryFile
 from urllib.parse import urlparse
+from socket import gaierror
 
 from crayipxe import IPXE_BUILD_DIR
 from crayipxe.k8s_client import api_instance, client
@@ -442,31 +443,36 @@ class BinaryBuilder(object):
         os.chdir(IPXE_BUILD_DIR)
         self.heartbeat.start()
         first_time = True
+
         while True:
-            self.set_log_level()
-            # On the first pass through, we don't want to wait.
-            if not first_time:
-                time.sleep(self.TIME_BETWEEN_BUILDCHECKS)
-            first_time = False
-            if not self.enabled:
-                continue
+            try:
+                self.set_log_level()
+                # On the first pass through, we don't want to wait.
+                if not first_time:
+                    time.sleep(self.TIME_BETWEEN_BUILDCHECKS)
+                first_time = False
+                if not self.enabled:
+                    continue
 
-            # Generate a set of build commands for binary and debug versions to determine if recreation is necessary
-            build_command = self.build_command
-            debug_command= self.debug_command
-            if not self.recreation_necessary:
-                continue
+                # Generate a set of build commands for binary and debug versions to determine if recreation is necessary
+                build_command = self.build_command
+                debug_command= self.debug_command
+                if not self.recreation_necessary:
+                    continue
 
-            self.build_binary(build_command)
-            self.publish_binary()
-            self.liveness_probe.refresh_build()
-            self.build_binary(debug_command, debug=True)
-            self.publish_debug()
-            self.liveness_probe.refresh_build()
+                self.build_binary(build_command)
+                self.publish_binary()
+                self.liveness_probe.refresh_build()
+                self.build_binary(debug_command, debug=True)
+                self.publish_debug()
+                self.liveness_probe.refresh_build()
 
-            # Until next time...
-            self.recreation_necessary = False
-
+                # Until next time...
+                self.recreation_necessary = False
+            except gaierror as gerror:
+                LOGGER.exception("Generic socket timeout error occurred; retrying at a later point.")
+            except Exception as exception:
+                LOGGER.exception("Unhandled exception occurred; retrying at a later point.")
 
 class X86Builder(BinaryBuilder):
     ARCH = 'x86_64'
