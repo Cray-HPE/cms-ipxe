@@ -37,6 +37,7 @@ import time
 LOGGER = logging.getLogger(__name__)
 LIVENESS_PATH = '/tmp/ipxe_build_in_progress'
 
+MAIN_THREAD = threading.currentThread()
 
 class BaseipxeTimestampException(BaseException):
     pass
@@ -50,7 +51,6 @@ class ipxeTimestampNoEnt(BaseipxeTimestampException):
 
 
 class ipxeTimestamp(object):
-
     def __init__(self, path, max_age, when=None):
         '''
         Creates a new timestamp representation to <path>; on initialization,
@@ -292,5 +292,8 @@ def liveliness_heartbeat(path):
     """
     timestamp = ipxeTimestamp.byref(path)
     while True:
+        if not MAIN_THREAD.isAlive():
+            # All hope abandon ye who enter here
+            return
         timestamp.refresh()
         time.sleep(10)
