@@ -469,9 +469,9 @@ class BinaryBuilder(object):
 
                 # Until next time...
                 self.recreation_necessary = False
-            except gaierror as gerror:
+            except gaierror:
                 LOGGER.exception("Generic socket timeout error occurred; retrying at a later point.")
-            except Exception as exception:
+            except Exception:
                 LOGGER.exception("Unhandled exception occurred; retrying at a later point.")
 
 class X86Builder(BinaryBuilder):
