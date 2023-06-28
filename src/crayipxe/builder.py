@@ -141,7 +141,7 @@ class BinaryBuilder(object):
         but can also support a subset of different make targets from the upstream build environment.
         :return:
         """
-        return self.global_settings.get('build_kind', 'ipxe')
+        return self.global_settings.get('cray_ipxe_build_kind', 'ipxe')
 
     @property
     def enabled(self):
@@ -254,8 +254,8 @@ class BinaryBuilder(object):
         return self._cert_path
 
     @property
-    def configmap(self):
-        raise NotImplemented
+    def configmap_name(self):
+        raise Exception("Not Implemented in base class")
     @property
     def bss_script_path(self):
         """
