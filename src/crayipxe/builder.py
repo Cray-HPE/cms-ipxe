@@ -56,7 +56,6 @@ class BinaryBuilder(object):
     CONFIGMAP_CACHE_TIMEOUT = 600
 
     # To be set by inheriting classes
-    ARCH_BUILD_DIR = None
     ARCH = None
     ENABLED_TAG = None
     ENABLED_DEBUG_TAG = None
@@ -93,12 +92,11 @@ class BinaryBuilder(object):
         self._cert_path = None
 
         self.namespace = 'services'
-        self._arch_build_dir = None
+        self._make_target = None
 
         # Create a liveness probe that can be updated periodically to indicate that we're alive and kicking
         self.liveness_probe = ipxeTimestamp(LIVENESS_PATH, os.getenv('IPXE_BUILD_TIME_LIMIT', 40))
         self.heartbeat = threading.Thread(target=liveliness_heartbeat, args=(LIVENESS_PATH,))
-
 
         # This is a flag for the whole builder that indicates if a new ipxe binary should be built. Its' value is
         # changed dynamically through behavior defined by timeout expiration and change of settings.
@@ -135,6 +133,15 @@ class BinaryBuilder(object):
             LOGGER.info("New global settings cached; rebuild is possible if enabled.")
             self.recreation_necessary = True
         return self._global_settings
+
+    @property
+    def build_kind(self):
+        """
+        A string value representing the overall kind of artifact this builder produces. Most typically, this is 'ipxe',
+        but can also support a subset of different make targets from the upstream build environment.
+        :return:
+        """
+        return self.global_settings.get('cray_ipxe_build_kind', 'ipxe')
 
     @property
     def enabled(self):
@@ -247,6 +254,9 @@ class BinaryBuilder(object):
         return self._cert_path
 
     @property
+    def configmap_name(self):
+        raise Exception("Not Implemented in base class")
+    @property
     def bss_script_path(self):
         """
         :return: returns an absolute path to a file located in the build dir containing the bss script.
@@ -285,7 +295,8 @@ class BinaryBuilder(object):
             with open(self._debug_script_path, 'r') as debug_script_file:
                 local_debug_script = debug_script_file.read()
         upstream_debug_script = safe_load(api_instance.read_namespaced_config_map('cray-ipxe-shell-ipxe',
-                                                                        self.namespace).data.get('shell.ipxe'))
+                                                                                  self.namespace).data.get(
+            'shell.ipxe'))
         if local_debug_script != upstream_debug_script:
             if not self._debug_script_path:
                 LOGGER.info("New Debug script available; first time build is flagged.")
@@ -299,15 +310,37 @@ class BinaryBuilder(object):
         return self._debug_script_path
 
     @property
-    def arch_build_dir(self):
+    def make_target(self):
         """
-        An arch build dir is a directory inside the ipxe build environment that corresponds to a specific build arch.
-        All artifacts and compiled sources live within this directory.
+        Every buildout corresponds to a makefile target, and this is in turn influenced by overall architecture and
+        build kind. When the build command is successful, the make_target informs the artifact produced, where it can
+        then be renamed and moved to the appropriate location.
         :return:
         """
-        if not self._arch_build_dir:
-            self._arch_build_dir = 'bin-%s-efi' % self.ARCH
-        return self._arch_build_dir
+        if self._make_target:
+            return self._make_target
+        if self.build_kind == 'ipxe':
+            if self.ARCH == 'x86_64':
+                self._make_target = 'bin-x86_64-efi/ipxe.efi'
+            elif self.ARCH == 'arm64':
+                self._make_target = 'bin-arm64-efi/ipxe.efi'
+        elif self.build_kind == 'kpxe':
+            if self.ARCH == 'arm64':
+                LOGGER.warning(
+                    "Unsupported build option of kind 'kpxe' with architecture 'arm64'; defaulting to 'ipxe'.")
+                self._make_target = 'bin-arm64-efi/ipxe.efi'
+            else:
+                self._make_target = 'bin/undionly.kpxe'
+        return self._make_target
+
+    @property
+    def make_artifact_path(self):
+        """
+        The name of the resultant built artifact file. This represents the abs path to the file that is created during
+        a successful make operation.
+        :return: a string path
+        """
+        return os.path.join(IPXE_BUILD_DIR, self.make_target)
 
     @property
     def bearer_token(self):
@@ -335,8 +368,7 @@ class BinaryBuilder(object):
         filesystem, stage new content from configmaps, and generally set the build in motion. Do not invoke the command
         lightly, and capture the result instead of calling this multiple times.
         """
-        build_command = ['make']
-        build_command.append('%s/ipxe.efi' % self.arch_build_dir)
+        build_command = ['make', self.make_target]
         # To apply any builder specific additions, if any
         build_command.extend(self.MAKE_ADDENDUM)
         build_command.append('DEBUG=%s' % self.build_options)
@@ -363,8 +395,7 @@ class BinaryBuilder(object):
         filesystem, stage new content from configmaps, and generally set the build in motion. Do not invoke the command
         lightly, and capture the result instead of calling this multiple times.
         """
-        debug_command = ['make']
-        debug_command.append('%s/ipxe.efi' % self.arch_build_dir)
+        debug_command = ['make', self.make_target]
         # To apply any builder specific additions, if any
         debug_command.extend(self.MAKE_ADDENDUM)
         debug_command.append('DEBUG=%s' % self.build_debug_options)
@@ -386,7 +417,7 @@ class BinaryBuilder(object):
         """
         The full path of the artifact that is built out into the build dir after the make command succeeds.
         """
-        return os.path.join(IPXE_BUILD_DIR, self.arch_build_dir, 'ipxe.efi')
+        return self.make_artifact_path
 
     @property
     def destination_abs_path(self):
@@ -413,26 +444,25 @@ class BinaryBuilder(object):
         """
         cray_ipxe_build_debug = self.global_settings.get('cray_ipxe_build_service_log_level', "DEBUG")
         try:
-            root_logger = logging.getLogger()
-            root_logger.setLevel(cray_ipxe_build_debug)
+            logging.getLogger().setLevel(cray_ipxe_build_debug)
         except ValueError as ve:
-            root_logger.setLevel("DEBUG")
+            logging.getLogger().setLevel("DEBUG")
             LOGGER.warning("Unknown log level '%s'; defaulting to DEBUG.")
 
     def build_binary(self, command, debug=False):
         if not debug:
-            LOGGER.info("Preparing to build new %s binary." % self.ARCH)
+            LOGGER.info("Preparing to build new %s binary.", self.ARCH)
         else:
-            LOGGER.info("Preparing to build new %s DEBUG binary." % self.ARCH)
+            LOGGER.info("Preparing to build new %s DEBUG binary.", self.ARCH)
         subprocess.check_call(command)
 
     def publish_binary(self):
         shutil.move(self.built_binary_abs_path, self.destination_abs_path)
-        LOGGER.info('New ipxe binary has been published.')
+        LOGGER.info('New %s binary has been published.', self.build_kind)
 
     def publish_debug(self):
         shutil.move(self.built_binary_abs_path, self.debug_destination_abs_path)
-        LOGGER.info('New DEBUG ipxe binary has been published.')
+        LOGGER.info('New DEBUG %s binary has been published.', self.build_kind)
 
     def __call__(self):
         """
@@ -456,7 +486,7 @@ class BinaryBuilder(object):
 
                 # Generate a set of build commands for binary and debug versions to determine if recreation is necessary
                 build_command = self.build_command
-                debug_command= self.debug_command
+                debug_command = self.debug_command
                 if not self.recreation_necessary:
                     continue
 
@@ -474,6 +504,7 @@ class BinaryBuilder(object):
             except Exception:
                 LOGGER.exception("Unhandled exception occurred; retrying at a later point.")
 
+
 class X86Builder(BinaryBuilder):
     ARCH = 'x86_64'
     ENABLED_TAG = 'cray_ipxe_build_x86'
@@ -483,12 +514,7 @@ class X86Builder(BinaryBuilder):
 
     @property
     def configmap_name(self):
-        if not self._configmap_name:
-            base_name = 'cray-ipxe-bss-ipxe'
-            if self.ARCH == 'aarch64':
-                base_name = '%s-aarch64'
-            self._configmap_name = base_name
-        return self._configmap_name
+        return 'cray-ipxe-bss-ipxe'
 
 
 class Arm64builder(BinaryBuilder):
@@ -502,12 +528,7 @@ class Arm64builder(BinaryBuilder):
 
     @property
     def configmap_name(self):
-        if not self._configmap_name:
-            base_name = 'cray-ipxe-bss-ipxe'
-            if self.ARCH == 'aarch64':
-                base_name = '%s-aarch64'
-            self._configmap_name = base_name
-        return self._configmap_name
+        return 'cray-ipxe-bss-ipxe-aarch64'
 
 
 if __name__ == '__main__':

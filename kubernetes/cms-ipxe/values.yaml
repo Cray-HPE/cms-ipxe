@@ -167,6 +167,11 @@ ipxe:
   # this high.
   bss_ceiling: 64
 
+  # The build_kind variable controls the overall buildout of the binaries for all builders, and defaults to 'ipxe'. This
+  # allows the builders to change effective behavior for the kinds of artifacts that are eventually built out to further
+  # support kpxe/undionly variants.
+  build_kind: ipxe
+
   # These options are specific to x86_64 ipxe builds
   build_x86: true
   cray_ipxe_binary_name: ipxe.efi
@@ -178,6 +183,7 @@ ipxe:
   cray_ipxe_aarch64_binary_name: ipxe.arm64.efi
   build_aarch64_debug: true
   cray_ipxe_aarch64_debug_binary_name: debug-ipxe.arm64.efi
+
 
 post_upgrade:
   image:
