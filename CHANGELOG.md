@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deprecated configuration variables with no viable or used method for configuration
 
 
+## Unreleased
+### Added
+- Added support for x86 based undionly.kpxe build variant through configmap 'build_kind' variable.
+### Fixed
+- Correct mismatch in aarch64's referenced configmap (previously was still referencing x86's version)
+
 ## [1.11.2] - 2023-04-14
 
 ### Fixed
