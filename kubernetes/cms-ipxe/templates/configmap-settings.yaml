@@ -34,6 +34,7 @@ data:
     cray_ipxe_token_min_remaining_valid_time: {{ .Values.ipxe.token_min_remaining_valid_time }}
     cray_ipxe_build_with_cert: {{ .Values.ipxe.build_with_cert }}
     cray_ipxe_build_service_log_level : {{ .Values.ipxe.build_service_log_level }}
+    cray_ipxe_build_kind: {{ .Values.ipxe.build_kind }}
 
     # x86_64 build options
     cray_ipxe_build_x86: {{ .Values.ipxe.build_x86 }}
