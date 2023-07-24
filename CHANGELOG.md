@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Dependencies
+Bumped depndency patch versions
+| Package                  | From    | To       |
+|--------------------------|---------|----------|
+| `google-auth`            | 1.6.1   | 1.6.3    |
+| `pyasn1`                 | 0.4.4   | 0.4.8    |
+| `pyasn1-modules`         | 0.2.2   | 0.2.8    |
+| `python-dateutil`        | 2.8.1   | 2.8.2    |
+| `rsa`                    | 4.7     | 4.7.2    |
+| `urllib3`                | 1.25.9  | 1.25.11  |
+| `websocket-client`       | 1.5.1   | 1.5.3    |
 
 ## [1.11.5] - 2023-07-12
 ### Added
