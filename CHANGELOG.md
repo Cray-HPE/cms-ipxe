@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added build timeout to avoid hung builds
 
 ### Dependencies
+- Bump `tj-actions/changed-files` from 37 to 38 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74))
 Bumped depndency patch versions
 | Package                  | From    | To       |
 |--------------------------|---------|----------|
