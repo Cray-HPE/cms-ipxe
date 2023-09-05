@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 - Bump `tj-actions/changed-files` from 37 to 38 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74))
+- Bump `actions/checkout` from 3 to 4 ([#75](https://github.com/Cray-HPE/cms-ipxe/pull/75))
 Bumped depndency patch versions
 | Package                  | From    | To       |
 |--------------------------|---------|----------|
