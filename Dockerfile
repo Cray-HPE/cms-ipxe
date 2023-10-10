@@ -30,8 +30,8 @@
 # themselves need to be dynamically recreated whenever the public CA cert
 # changes.
 ARG Upstream=artifactory.algol60.net
-ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
-ARG Stable=stable
+ARG IpxeTag=3.1.0-MTL-2104.15_d0fdbd8
+ARG Stable=unstable
 FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
 RUN mkdir /app
 WORKDIR /app
