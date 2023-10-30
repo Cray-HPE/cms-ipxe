@@ -25,6 +25,11 @@ Bumped depndency patch versions
 | `urllib3`                | 1.25.9  | 1.25.11  |
 | `websocket-client`       | 1.5.1   | 1.5.3    |
 
+## [1.11.6] - 2023-10-26
+### Changed
+- Fixed a typecasting bug encountered during evaluation of token timeout
+- Changed the resultant docker image to include an entrypoint consistent with default use of an x86-64 builder, for use with mercury.
+
 ## [1.11.5] - 2023-07-12
 ### Added
 - Added helm chart passthrough variables for build kind
