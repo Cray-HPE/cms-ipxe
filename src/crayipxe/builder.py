@@ -69,8 +69,8 @@ class BinaryBuilder(object):
     TIME_BETWEEN_BUILDCHECKS = 60
 
     def __init__(self):
-        self._build_options = ['httpcore', 'x509', 'efi_time']
-        self._build_debug_options = ['httpcore:2', 'x509:2', 'efi_time']
+        self._build_options = ['httpcore', 'x509', 'efi_time', 'pxe_image']
+        self._build_debug_options = ['httpcore:2', 'x509:2', 'efi_time', 'pxe_image']
 
         # Options and structures unique to the global configmap
         self.global_settings_configmap_name = 'cray-ipxe-settings'
