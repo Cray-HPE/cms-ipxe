@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added build timeout to avoid hung builds
 
 ### Dependencies
-- Bump `tj-actions/changed-files` from 37 to 41 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74), [#76](https://github.com/Cray-HPE/cms-ipxe/pull/76), [#79](https://github.com/Cray-HPE/cms-ipxe/pull/79), [#81](https://github.com/Cray-HPE/cms-ipxe/pull/81))
+- Bump `tj-actions/changed-files` from 37 to 42 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74), [#76](https://github.com/Cray-HPE/cms-ipxe/pull/76), [#79](https://github.com/Cray-HPE/cms-ipxe/pull/79), [#81](https://github.com/Cray-HPE/cms-ipxe/pull/81), [#83](https://github.com/Cray-HPE/cms-ipxe/pull/83))
 - Bump `actions/checkout` from 3 to 4 ([#75](https://github.com/Cray-HPE/cms-ipxe/pull/75))
 - Bump `stefanzweifel/git-auto-commit-action` from 4 to 5 ([#77](https://github.com/Cray-HPE/cms-ipxe/pull/77))
 Bumped depndency patch versions
