@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2024 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -130,21 +130,13 @@ ipxe:
 
   # The following are options that pertain to the resultant interfaces that are
   # allowed as booting devices. By default, the resultant ipxe binary will instruct
-  # nodes to boot over interfaces 2, 0, and 1, in that order. iPXE discovers and
-  # labels interfaces based on how they're discovered based on their PCI id;
-  # as a result, effective networks are attempted one after the other, until a
-  # valid response from the boot script service (BSS) is successful. For systems
-  # with homongenous hardware, it may be possible to alter the order of, or remove
-  # networks which do not correspond to networks which expose boot services.
-  # Overall time incurred on network miss depends on dhcp configuration on the
-  # network attached to the NICs, but is about 10 seconds per failed network try.
-  nic_boot_order:
-  - net2
-  - net0
-  - net1
-  - net3
-  - net4
-  - net5
+  # nodes to boot over interfaces starting with VIP index=2. This VIP index
+  # indicates which network interface to try first, before iterating through the
+  # remainder of the interfaces starting with interface zero. For example,
+  # a VIP index of 2 would start with net2 and then proceed through net0, net1,
+  # net3[, netX].
+  # NOTE: Setting this to a value of 0 disables VIP behavior.
+  nic_index_vip: 2
 
   bss_max_attempts: 1024
 

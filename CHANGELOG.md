@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- MTL-2371 Refactored BSS iPXE network interface loop
 - Disabled concurrent Jenkins builds on same branch/commit
 - Added build timeout to avoid hung builds
 
@@ -14,16 +15,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bump `tj-actions/changed-files` from 37 to 42 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74), [#76](https://github.com/Cray-HPE/cms-ipxe/pull/76), [#79](https://github.com/Cray-HPE/cms-ipxe/pull/79), [#81](https://github.com/Cray-HPE/cms-ipxe/pull/81), [#83](https://github.com/Cray-HPE/cms-ipxe/pull/83))
 - Bump `actions/checkout` from 3 to 4 ([#75](https://github.com/Cray-HPE/cms-ipxe/pull/75))
 - Bump `stefanzweifel/git-auto-commit-action` from 4 to 5 ([#77](https://github.com/Cray-HPE/cms-ipxe/pull/77))
-Bumped depndency patch versions
-| Package                  | From    | To       |
-|--------------------------|---------|----------|
-| `google-auth`            | 1.6.1   | 1.6.3    |
-| `pyasn1`                 | 0.4.4   | 0.4.8    |
-| `pyasn1-modules`         | 0.2.2   | 0.2.8    |
-| `python-dateutil`        | 2.8.1   | 2.8.2    |
-| `rsa`                    | 4.7     | 4.7.2    |
-| `urllib3`                | 1.25.9  | 1.25.11  |
-| `websocket-client`       | 1.5.1   | 1.5.3    |
+- Bumped dependency patch versions:
+  
+    | Package                  | From    | To       |
+    |--------------------------|---------|----------|
+    | `google-auth`            | 1.6.1   | 1.6.3    |
+    | `pyasn1`                 | 0.4.4   | 0.4.8    |
+    | `pyasn1-modules`         | 0.2.2   | 0.2.8    |
+    | `python-dateutil`        | 2.8.1   | 2.8.2    |
+    | `rsa`                    | 4.7     | 4.7.2    |
+    | `urllib3`                | 1.25.9  | 1.25.11  |
+    | `websocket-client`       | 1.5.1   | 1.5.3    |
 
 ## [1.11.6] - 2023-10-26
 ### Changed
@@ -52,7 +54,6 @@ Bumped depndency patch versions
 - Correct mismatch in aarch64's referenced configmap (previously was still referencing x86's version)
 ### Removed
 - Deprecated configuration variables with no viable or used method for configuration
-
 
 ## [1.11.2] - 2023-04-14
 
