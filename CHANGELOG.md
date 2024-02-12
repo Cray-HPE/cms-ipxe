@@ -5,7 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [Unreleased]
+
+## [1.12.0] - 2024-02-08
+
+### Changed
+- MTL-2371 Refactored BSS iPXE network interface loop
+- Disabled concurrent Jenkins builds on same branch/commit
+- Added build timeout to avoid hung builds
+
+### Dependencies
+- Bump `tj-actions/changed-files` from 37 to 42 ([#74](https://github.com/Cray-HPE/cms-ipxe/pull/74), [#76](https://github.com/Cray-HPE/cms-ipxe/pull/76), [#79](https://github.com/Cray-HPE/cms-ipxe/pull/79), [#81](https://github.com/Cray-HPE/cms-ipxe/pull/81), [#83](https://github.com/Cray-HPE/cms-ipxe/pull/83))
+- Bump `actions/checkout` from 3 to 4 ([#75](https://github.com/Cray-HPE/cms-ipxe/pull/75))
+- Bump `stefanzweifel/git-auto-commit-action` from 4 to 5 ([#77](https://github.com/Cray-HPE/cms-ipxe/pull/77))
+- Bump `kubernetes` from 10.0.1 to 22.6.0 to match CSM 1.6 Kubernetes version
+- Bump dependency patch versions:
+  
+    | Package                  | From    | To       |
+    |--------------------------|---------|----------|
+    | `google-auth`            | 1.6.1   | 1.6.3    |
+    | `pyasn1`                 | 0.4.4   | 0.4.8    |
+    | `pyasn1-modules`         | 0.2.2   | 0.2.8    |
+    | `python-dateutil`        | 2.8.1   | 2.8.2    |
+    | `rsa`                    | 4.7     | 4.7.2    |
+    | `urllib3`                | 1.25.9  | 1.25.11  |
+    | `websocket-client`       | 1.5.1   | 1.5.3    |
 
 ## [1.11.6] - 2023-10-26
 ### Changed
@@ -34,7 +58,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correct mismatch in aarch64's referenced configmap (previously was still referencing x86's version)
 ### Removed
 - Deprecated configuration variables with no viable or used method for configuration
-
 
 ## [1.11.2] - 2023-04-14
 

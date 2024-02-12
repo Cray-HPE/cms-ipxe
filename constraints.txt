@@ -1,17 +1,18 @@
 cachetools==3.0.0
 certifi==2019.11.28
 chardet==3.0.4
-google-auth==1.6.1
+google-auth==1.6.3
 idna==2.8
-kubernetes==10.0.1
+# CSM 1.6 uses Kubernetes 1.22, so use client v22.x to ensure compatability
+kubernetes==22.6.0
 oauthlib==2.1.0
-pyasn1==0.4.4
-pyasn1-modules==0.2.2
+pyasn1==0.4.8
+pyasn1-modules==0.2.8
 PyJWT==2.0.1
-python-dateutil==2.8.1
+python-dateutil==2.8.2
 PyYAML==5.4.1
 requests==2.23.0
 requests-oauthlib==1.0.0
-rsa==4.7
-urllib3==1.25.9
+rsa==4.7.2
+urllib3==1.25.11
 websocket-client==0.54.0
