@@ -62,6 +62,10 @@ data:
 
     set vidx:int8 {{ .Values.ipxe.nic_index_vip }}
 
+    # If the VIP index does not exist, then default to 0. This is useful for systems with less NICs than what the default VIP index is set for.
+
+    isset ${net${vidx}/mac} || set vidx:int8 0
+
     :dhcpcheck isset ${net${vidx}/mac} || goto retry
 
       # Attempt to use the NIC.
