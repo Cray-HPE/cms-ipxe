@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- MTL-2380 Fix carriage returns when block lives in `>` for BSS iPXE scripts.
+
 ## [1.12.0] - 2024-02-08
 
 ### Changed
