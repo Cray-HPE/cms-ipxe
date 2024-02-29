@@ -79,6 +79,7 @@ class BinaryBuilder(object):
 
         # Builder specific BSS settings configmap name (derived from arch). Tells the ipxe environment how to get to
         # BSS to make the next request specific to the node in question.
+        self.configmap_name = None
         self._configmap_name = None
         self._bss_script_path = None
 
@@ -253,9 +254,6 @@ class BinaryBuilder(object):
                 self._cert_path = cert_file.name
         return self._cert_path
 
-    @property
-    def configmap(self):
-        raise NotImplemented
     @property
     def bss_script_path(self):
         """
