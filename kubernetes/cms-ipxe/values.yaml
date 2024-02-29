@@ -115,7 +115,7 @@ ipxe:
   namespace: services
 
   # These settings influence the creation of the bss ipxe script; these settings apply to multiple architecture builders.
-  build_service_log_level: INFO
+  build_service_log_level: DEBUG
 
   # Override with networks['node_management'].api_gw_service_dnsname
   api_gw: api-gw-service-nmn.local
