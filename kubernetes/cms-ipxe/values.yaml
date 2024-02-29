@@ -30,48 +30,44 @@
 #   tag: "" (default = "latest")
 #   pullPolicy: "" (default = "IfNotPresent")
 
-deploymentDefaults:
-  service:
-    enabled: False
-  sqlCluster:
-    enabled: False
-  global:
-    chart:
-      name: cms-ipxe
-  kafkaCluster:
-    enabled: False
-  initContainers: []
-  replicaCount: 1
+cray-service:
+  type: Deployment
+  nameOverride: cray-ipxe
+  fullnameOverride: cray-ipxe
+  serviceAccountName: cray-ipxe
   priorityClassName: csm-high-priority-service
-
-builderDefaults:
+  replicaCount: 1
   containers:
     builder:
-      name: cray-ipxe
+      name: builder
       image:
         repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
+      command:
+        - python3
+        - "-m"
+        - "crayipxe.builds.x86-64"
       volumeMounts:
-        - name: cray-tftp-data
-          mountPath: /shared_tftp
-          subPath: tftp
-        - name: client-auth
-          mountPath: /client_auth
-          readOnly: true
-        - name: ca-public-key
-          mountPath: /ca_public_key
+      - name: cray-tftp-data
+        mountPath: /shared_tftp
+        subPath: tftp
+      - name: client-auth
+        mountPath: /client_auth
+        readOnly: true
+      - name: ca-public-key
+        mountPath: /ca_public_key
       env:
-        - name: LOG_LEVEL
-          value: INFO
-        - name: IPXE_BUILD_TIME_LIMIT
-          value: "40"
-        - name: DEBUG_IPXE_BUILD_TIME_LIMIT
-          value: "120"
+      - name: LOG_LEVEL
+        value: INFO
+      - name: IPXE_BUILD_TIME_LIMIT
+        value: "40"
+      - name: DEBUG_IPXE_BUILD_TIME_LIMIT
+        value: "120"
       livenessProbe:
         exec:
           command:
-            - python3
-            - "-m"
-            - crayipxe.liveness
+          - python3
+          - "-m"
+          - crayipxe.liveness
         initialDelaySeconds: 40
         periodSeconds: 40
   volumes:
@@ -87,28 +83,8 @@ builderDefaults:
       name: ca-public-key
       configMap:
         name: cray-configmap-ca-public-key
-
-builders:
-  aarch-64:
-    Values:
-      nameOverride: cray-ipxe-aarch64
-      fullnameOverride: cray-ipxe-aarch64
-      containers:
-        builder:
-          command:
-            - python3
-            - "-m"
-            - "crayipxe.builds.aarch64"
-  x86-64:
-    Values:
-      nameOverride: cray-ipxe-x86-64
-      fullnameOverride: cray-ipxe-x86-64
-      containers:
-        builder:
-          command:
-            - python3
-            - "-m"
-            - "crayipxe.builds.aarch64"
+  service:
+    enabled: false
 
 ipxe:
   name: cray-ipxe
@@ -183,5 +159,30 @@ post_upgrade:
   image:
     repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
 
-cray-service:
-  type: None
+deploymentDefaults:
+  service:
+    enabled: False
+  sqlCluster:
+    enabled: False
+  global:
+    chart:
+      name: cms-ipxe
+  kafkaCluster:
+    enabled: False
+
+builderDefaults:
+  containers:
+    builder:
+      name: cray-ipxe
+
+builders:
+  aarch-64:
+    Values:
+      nameOverride: cray-ipxe-aarch64
+      fullnameOverride: cray-ipxe-aarch64
+      containers:
+        builder:
+          command:
+            - python3
+            - "-m"
+            - "crayipxe.builds.aarch64"

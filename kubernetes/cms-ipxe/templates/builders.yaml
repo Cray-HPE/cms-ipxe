@@ -28,7 +28,6 @@ OTHER DEALINGS IN THE SOFTWARE.
 ---
 {{ $_ := set $builder "Chart" $base.Chart }}
 {{- $_ := set $builder "Release" $base.Release }}
-{{- $_ := deepCopy $builderDefaults | merge $builder.Values }}
-{{- include "cray-ipxe.deployment" $builder -}}
+{{- include "cms-ipxe.deployment" $builder -}}
 
 {{- end }}
