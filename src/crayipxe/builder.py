@@ -240,9 +240,9 @@ class BinaryBuilder(object):
             if self._cert_path and os.path.exists(self._cert_path):
                 os.unlink(self._cert_path)
                 self._cert_path = None
-            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False, mode='w') as cert_file:
-                cert_file.write(upstream_cert)
-                self._cert_path = cert_file.name
+            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False) as certfile:
+                certfile.write(upstream_cert)
+                self._cert_path = certfile.name
         return self._cert_path
 
     @property
@@ -265,7 +265,7 @@ class BinaryBuilder(object):
             else:
                 LOGGER.info("Change in upstream BSS script detected; rebuild is flagged.")
                 os.unlink(self._bss_script_path)
-            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False, mode='w') as ntf:
+            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False) as ntf:
                 ntf.write(upstream_bss_script)
                 self._bss_script_path = ntf.name
             self.recreation_necessary = True
@@ -291,7 +291,7 @@ class BinaryBuilder(object):
             else:
                 LOGGER.info("Change in upstream Debug script detected; rebuild is flagged.")
                 os.unlink(self._debug_script_path)
-            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False, mode='w') as ntf:
+            with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False) as ntf:
                 ntf.write(upstream_debug_script)
                 self._debug_script_path = ntf.name
             self.recreation_necessary = True
