@@ -320,12 +320,12 @@ class BinaryBuilder(object):
         if self._make_target:
             return self._make_target
         if self.build_kind == 'ipxe':
-            if self.ARCH == 'x86_64':
+            if self.arch == 'x86_64':
                 self._make_target = 'bin-x86_64-efi/ipxe.efi'
-            elif self.ARCH == 'arm64':
+            elif self.arch == 'arm64':
                 self._make_target = 'bin-arm64-efi/ipxe.efi'
         elif self.build_kind == 'kpxe':
-            if self.ARCH == 'arm64':
+            if self.arch == 'arm64':
                 LOGGER.warning(
                     "Unsupported build option of kind 'kpxe' with architecture 'arm64'; defaulting to 'ipxe'.")
                 self._make_target = 'bin-arm64-efi/ipxe.efi'
