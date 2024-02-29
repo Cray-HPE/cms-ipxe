@@ -237,7 +237,7 @@ class BinaryBuilder(object):
             LOGGER.info("An update to the upstream certificate is available, rebuild is flagged.")
             self.recreation_necessary = True
             # Clean up the old file, we don't want to be sloppy
-            if self._cert_path and os.path.exists(self._cert_path):
+            if os.path.exists(self._cert_path):
                 os.unlink(self._cert_path)
                 self._cert_path = None
             with NamedTemporaryFile(dir=IPXE_BUILD_DIR, delete=False) as certfile:
@@ -257,8 +257,8 @@ class BinaryBuilder(object):
         if self._bss_script_path:
             with open(self._bss_script_path, 'r') as bss_script_file:
                 local_bss_script = bss_script_file.read()
-        upstream_bss_script = safe_load(api_instance.read_namespaced_config_map(self.configmap_name,
-                                                                      self.namespace).data.get('bss.ipxe'))
+        upstream_bss_script = api_instance.read_namespaced_config_map(self.configmap_name,
+                                                                      self.namespace).data.get('bss.ipxe')
         if local_bss_script != upstream_bss_script:
             if not self._bss_script_path:
                 LOGGER.info("New BSS script available; first time build is flagged.")
@@ -283,8 +283,8 @@ class BinaryBuilder(object):
         if self._debug_script_path:
             with open(self._debug_script_path, 'r') as debug_script_file:
                 local_debug_script = debug_script_file.read()
-        upstream_debug_script = safe_load(api_instance.read_namespaced_config_map('cray-ipxe-shell-ipxe',
-                                                                        self.namespace).data.get('shell.ipxe'))
+        upstream_debug_script = api_instance.read_namespaced_config_map('cray-ipxe-shell-ipxe',
+                                                                        self.namespace).data.get('shell.ipxe')
         if local_debug_script != upstream_debug_script:
             if not self._debug_script_path:
                 LOGGER.info("New Debug script available; first time build is flagged.")
