@@ -125,7 +125,7 @@ def token_expiring_soon(bearer_token, min_remaining_valid_time):
     # and signal that we should request a new token.  The buffer time is
     # configurable but a default is provided if needed.
     tnow = int(time.time())
-    tmax = tokenExp - int(min_remaining_valid_time)
+    tmax = tokenExp - min_remaining_valid_time
     LOGGER.debug("tnow=%s tmax=%s" % (tnow, tmax))
     if tnow >= tmax:
         LOGGER.debug("Detected that JWT will expire soon and needs updating.")

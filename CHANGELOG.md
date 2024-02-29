@@ -7,11 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## [1.11.6] - 2023-10-26
-### Changed
-- Fixed a typecasting bug encountered during evaluation of token timeout
-- Changed the resultant docker image to include an entrypoint consistent with default use of an x86-64 builder, for use with mercury.
-
 ## [1.11.5] - 2023-07-12
 ### Added
 - Added helm chart passthrough variables for build kind

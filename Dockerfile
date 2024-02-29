@@ -45,5 +45,4 @@ RUN apt -y update && \
 RUN echo 'alias ll="ls -l"' > ~/.bashrc
 RUN chown 65534:65534 -R /ipxe
 COPY /src/crayipxe /app/crayipxe
-ENTRYPOINT python3 -m crayipxe.builds.x86-64
 USER 65534:65534
