@@ -211,7 +211,7 @@ class BinaryBuilder(object):
             rgw_s3_host = parsed_uri.hostname
             if rgw_s3_host:
                 # Override the default S3_HOST ipxe makefile parameter value.
-                LOGGER.debug("Using custom S3_HOST=%s" % rgw_s3_host)
+                LOGGER.info("Using custom S3_HOST=%s" % rgw_s3_host)
                 return rgw_s3_host
         except KeyError as kex:
             LOGGER.error("Error reading the sts-rados-config map.  Unable to override S3_HOST")
@@ -492,7 +492,7 @@ class Arm64builder(BinaryBuilder):
     ARCH = 'arm64'
     ENABLED_TAG = 'cray_ipxe_build_aarch64'
     ENABLED_DEBUG_TAG = 'cray_ipxe_aarch64_debug_enabled'
-    BINARY_NAME_TAG = 'cray_ipxe_aarch64_binary_name'
+    BINARY_NAME_TAG = 'cray_ipxe_binary_name'
     DEBUG_BINARY_NAME_TAG = 'cray_ipxe_aarch64_debug_binary_name'
     MAKE_ADDENDUM = ['CROSS_COMPILE=aarch64-linux-gnu-',
                      'ARCH=arm64']
