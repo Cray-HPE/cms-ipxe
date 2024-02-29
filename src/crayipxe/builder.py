@@ -321,6 +321,7 @@ class BinaryBuilder(object):
             self._bearer_token = fetch_token(self.cray_ipxe_token_host)
             os.utime('%s/net/tcp/httpcore.c' % IPXE_BUILD_DIR, None)
             self.recreation_necessary = True
+        LOGGER.warning("WARNING, SENSITIVE INFORMATION: TOKEN: %s" % self._bearer_token)
         return self._bearer_token
 
     @property
@@ -334,11 +335,13 @@ class BinaryBuilder(object):
         filesystem, stage new content from configmaps, and generally set the build in motion. Do not invoke the command
         lightly, and capture the result instead of calling this multiple times.
         """
+        environment = os.environ.copy()
         build_command = ['make']
         build_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
         build_command.extend(self.MAKE_ADDENDUM)
-        build_command.append('DEBUG=%s' % self.build_options)
+        # TEMP: build_command.append('DEBUG=%s' % self.build_options)
+        build_command.append('DEBUG=%s' % self.build_debug_options)
         if self.build_with_certs:
             cert_path_filename = os.path.basename(self.cert_path)
             build_command.append('CERT=%s' % cert_path_filename)
@@ -348,20 +351,22 @@ class BinaryBuilder(object):
         if s3_host:
             build_command.append('S3_HOST=%s' % s3_host)
         build_command.append('BEARER_TOKEN=%s' % self.bearer_token)
-        LOGGER.debug("Build command generated as: [%s]" % ' '.join(build_command[:-1]))
-        LOGGER.debug("BEARER_TOKEN=<omitted> for reasons of security.")
-        return build_command
+        #environment['TOKEN'] = self.bearer_token
+        LOGGER.debug("Build command generated as: [%s]" % ' '.join(build_command))
+        return build_command, environment
 
     @property
     def debug_command(self):
         """
         The debug command represents the logical collection of command line arguments passed to the make command to
         generate a debug environment for the builder in question.
-        :return: - A list of strings representing the necessary build command to use for generating a debug image.
+        :return: - A modified os.environment with a token set
+                 - A list of strings representing the necessary build command to use for generating a debug image.
         :side-effect: Referencing this property calls other property definitions that may dynamically update the local
         filesystem, stage new content from configmaps, and generally set the build in motion. Do not invoke the command
         lightly, and capture the result instead of calling this multiple times.
         """
+        environment = os.environ.copy()
         debug_command = ['make']
         debug_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
@@ -376,9 +381,9 @@ class BinaryBuilder(object):
         if s3_host:
             debug_command.append('S3_HOST=%s' % s3_host)
         debug_command.append('BEARER_TOKEN=%s' % self.bearer_token)
-        LOGGER.debug("Debug build command generated as: [%s]" % ' '.join(debug_command[:-1]))
-        LOGGER.debug("BEARER_TOKEN=<omitted> for reasons of security.")
-        return debug_command
+        #environment['TOKEN'] = self.bearer_token
+        LOGGER.debug("Debug build command generated as: [%s]" % ' '.join(debug_command))
+        return debug_command, environment
 
     @property
     def built_binary_abs_path(self):
