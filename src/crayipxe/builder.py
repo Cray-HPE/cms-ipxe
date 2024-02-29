@@ -350,7 +350,7 @@ class BinaryBuilder(object):
             build_command.append('S3_HOST=%s' % s3_host)
         build_command.append('BEARER_TOKEN=$TOKEN')
         environment['TOKEN'] = self.bearer_token
-        LOGGER.debug("Build command generated as: [%s]" % ' '.join(build_command))
+        LOGGER.info("Build command generated as: [%s]" % ' '.join(build_command))
         return build_command, environment
 
     @property
@@ -380,7 +380,7 @@ class BinaryBuilder(object):
             debug_command.append('S3_HOST=%s' % s3_host)
         debug_command.append('BEARER_TOKEN=$TOKEN')
         environment['TOKEN'] = self.bearer_token
-        LOGGER.debug("Debug build command generated as: [%s]" % ' '.join(debug_command))
+        LOGGER.info("Debug build command generated as: [%s]" % ' '.join(debug_command))
         return debug_command, environment
 
     @property
