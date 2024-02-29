@@ -24,7 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 {{- $base := . -}}
 {{- $baseChartValues := index .Values "cray-service" -}}
 {{- $builderDefaults := deepCopy $base.Values.deploymentDefaults | merge $base.Values.builderDefaults -}}
-{{ range $key, $builder := .Values.builders }}
+{{ range $key, $builder := .Values.builder }}
 ---
 {{ $_ := set $builder "Chart" $base.Chart }}
 {{- $_ := set $builder "Release" $base.Release }}
