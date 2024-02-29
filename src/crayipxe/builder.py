@@ -340,8 +340,7 @@ class BinaryBuilder(object):
         build_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
         build_command.extend(self.MAKE_ADDENDUM)
-        # TEMP: build_command.append('DEBUG=%s' % self.build_options)
-        build_command.append('DEBUG=%s' % self.build_debug_options)
+        build_command.append('DEBUG=%s' % ','.join(self._build_options))
         if self.build_with_certs:
             cert_path_filename = os.path.basename(self.cert_path)
             build_command.append('CERT=%s' % cert_path_filename)
@@ -371,7 +370,7 @@ class BinaryBuilder(object):
         debug_command.append('%s/ipxe.efi' % self.arch_build_dir)
         # To apply any builder specific additions, if any
         debug_command.extend(self.MAKE_ADDENDUM)
-        debug_command.append('DEBUG=%s' % self.build_debug_options)
+        debug_command.append('DEBUG=%s' % ','.join(self._build_debug_options))
         if self.build_with_certs:
             cert_path_filename = os.path.basename(self.cert_path)
             debug_command.append('CERT=%s' % cert_path_filename)

@@ -175,9 +175,9 @@ ipxe:
 
   # These options are specific to aarch64/arm64 ipxe builds
   build_aarch64: true
-  cray_ipxe_aarch64_binary_name: ipxe.arm64.efi
+  cray_ipxe_aarch64_binary_name: ipxe.aarch64.efi
   build_aarch64_debug: true
-  cray_ipxe_aarch64_debug_binary_name: debug-ipxe.arm64.efi
+  cray_ipxe_aarch64_debug_binary_name: debug-ipxe.aarch64.efi
 
 post_upgrade:
   image:
