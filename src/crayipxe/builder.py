@@ -257,8 +257,8 @@ class BinaryBuilder(object):
         if self._bss_script_path:
             with open(self._bss_script_path, 'r') as bss_script_file:
                 local_bss_script = bss_script_file.read()
-        upstream_bss_script = api_instance.read_namespaced_config_map(self.configmap_name,
-                                                                      self.namespace).data.get('bss.ipxe')
+        upstream_bss_script = safe_load(api_instance.read_namespaced_config_map(self.configmap_name,
+                                                                      self.namespace).data.get('bss.ipxe'))
         if local_bss_script != upstream_bss_script:
             if not self._bss_script_path:
                 LOGGER.info("New BSS script available; first time build is flagged.")
