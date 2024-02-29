@@ -127,7 +127,7 @@ class BinaryBuilder(object):
         if not self._global_settings:
             self._global_settings = api_instance.read_namespaced_config_map(self.global_settings_configmap_name, self.namespace).data
             self._global_settings_timestamp = time.time()
-        if local_settings != self._global_settings:
+        if local_settings != self.global_settings:
             # Either this is the first time we've accessed the global settings, or the settings have changed.
             # in either case, an update to this value indicates we should rebuild to pick up the new values.
             LOGGER.info("New global settings cached; rebuild is possible if enabled.")
