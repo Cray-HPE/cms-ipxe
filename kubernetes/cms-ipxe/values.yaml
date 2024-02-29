@@ -36,48 +36,14 @@ cray-service:
   fullnameOverride: cray-ipxe
   serviceAccountName: cray-ipxe
   priorityClassName: csm-high-priority-service
+  nodeSelector:
+    node-discovery.cray.com/networks.node_management: "true"
   replicaCount: 1
   containers:
     cray-ipxe:
       name: cray-ipxe
       image:
         repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
-      command:
-        - python3
-        - "-m"
-        - "crayipxe.builds.x86-64"
-      volumeMounts:
-      - name: cray-tftp-data
-        mountPath: /shared_tftp
-        subPath: tftp
-      - name: client-auth
-        mountPath: /client_auth
-        readOnly: true
-      - name: ca-public-key
-        mountPath: /ca_public_key
-      env:
-      - name: LOG_LEVEL
-        value: INFO
-      - name: IPXE_BUILD_TIME_LIMIT
-        value: "40"
-      - name: DEBUG_IPXE_BUILD_TIME_LIMIT
-        value: "120"
-      livenessProbe:
-        exec:
-          command:
-          - python3
-          - "-m"
-          - crayipxe.liveness
-        initialDelaySeconds: 40
-        periodSeconds: 40
-    cray-ipxe-aarch64:
-      name: cray-ipxe-builder-aarch64
-      image:
-        repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
-      command:
-        - python3
-        - "-m"
-        - "crayipxe.builds.aarch64"
       volumeMounts:
       - name: cray-tftp-data
         mountPath: /shared_tftp
@@ -122,19 +88,23 @@ ipxe:
   name: cray-ipxe
   namespace: services
 
-  # These settings influence the creation of the bss ipxe script; these settings apply to multiple architecture builders.
-  build_service_log_level: DEBUG
-
   # Override with networks['node_management'].api_gw_service_dnsname
   api_gw: api-gw-service-nmn.local
-  build_with_cert: true
-  # If a token is going to expire within this number of seconds, update it.
-  token_min_remaining_valid_time: 1800
 
   # The following are options that pertain to the build environment; checking in
   # values here change the resultant number of build environments that are created
   # as a response to updates or changes in the environment.
+  build_bss: true
+  build_shell: true
   chain_timeout: 10000
+
+  # The following are options that pertain to which architectures are built for
+  # the ipxe flavors that are listed above.
+  build_x86: true
+
+  # The following are options that pertain to how the ipxe binaries are built with
+  # relation to embedding public CA certificates into images.
+  build_with_cert: true
 
   # The following are options that pertain to the resultant interfaces that are
   # allowed as booting devices. By default, the resultant ipxe binary will instruct
@@ -175,44 +145,18 @@ ipxe:
   # this high.
   bss_ceiling: 64
 
-  # These options are specific to x86_64 ipxe builds
-  build_x86: true
   cray_ipxe_binary_name: ipxe.efi
-  build_x86_debug: true
   cray_ipxe_debug_binary_name: debug-ipxe.efi
 
-  # These options are specific to aarch64/arm64 ipxe builds
-  build_aarch64: true
-  cray_ipxe_aarch64_binary_name: ipxe.aarch64.efi
-  build_aarch64_debug: true
-  cray_ipxe_aarch64_debug_binary_name: debug-ipxe.aarch64.efi
+  # Allow specification of an architecture other than x86_64 and a kind other than
+  # EFI.  Currently, the only supported architecture is 'x86_64' and the supported
+  # kinds are 'efi' and 'kpxe'.
+  #
+  # If you set the kind to 'kpxe' here, you also want to set the binary name (above)
+  # to 'undionly.kpxe' and the debug binary name to 'debug-undionly.kpxe'.
+  cray_ipxe_build_arch: x86_64
+  cray_ipxe_build_kind: efi
 
 post_upgrade:
   image:
     repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
-
-builderDefaults:
-  containers:
-
-
-builders:
-  x86-64:
-    Values:
-      nameOverride: cray-ipxe-x86-builder
-      fullnameOverride: cray-ipxe-x86-builder
-      containers:
-        operator:
-          command:
-          - python3
-          - "-m"
-          - "crayipxe.builds.x86-64"
-  aarch-64:
-    Values:
-      nameOverride: cray-ipxe-aarch64-builder
-      fullnameOverride: cray-ipxe-aarch64-builder
-      containers:
-        operator:
-          command:
-            - python3
-            - "-m"
-            - "crayipxe.builds.aarch64"

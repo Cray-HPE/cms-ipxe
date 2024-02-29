@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2020-2022 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -38,19 +38,26 @@ import logging
 import os
 import sys
 
-from crayipxe.liveness.ipxe_timestamp import ipxeTimestamp, LIVENESS_PATH, ipxeTimestampNoEnt
+from crayipxe.liveness.ipxe_timestamp import ipxeTimestamp, IPXE_PATH, DEBUG_IPXE_PATH, ipxeTimestampNoEnt
 
 LOGGER = logging.getLogger(__name__)
 
+
+def check_timestamp(timestamp_file):
+    try:
+        timestamp = ipxeTimestamp.byref(timestamp_file)
+    except ipxeTimestampNoEnt:
+        # The timestamp indicates a build is in progress. If there is no build in
+        # progress, there is nothing to check.
+        pass
+    else:
+        if not timestamp.alive:
+            LOGGER.warning("%s is taking too long to build; it may be hung.",
+                           os.path.basename(timestamp_file))
+            sys.exit(1)
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    try:
-        timestamp = ipxeTimestamp.byref(LIVENESS_PATH)
-        if timestamp.alive:
-            sys.exit(0)
-        else:
-            LOGGER.warning("Timestamp %s has expired")
-            sys.exit(1)
-    except ipxeTimestampNoEnt:
-        LOGGER.warning("No timestamp information has been made available yet.")
-        sys.exit(1)
+    check_timestamp(IPXE_PATH)
+    check_timestamp(DEBUG_IPXE_PATH)
+    sys.exit(0)
