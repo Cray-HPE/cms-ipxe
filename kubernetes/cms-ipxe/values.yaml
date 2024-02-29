@@ -33,12 +33,13 @@
 cray-service:
   type: Deployment
   nameOverride: cray-ipxe
+  fullnameOverride: cray-ipxe
   serviceAccountName: cray-ipxe
   priorityClassName: csm-high-priority-service
   replicaCount: 1
   containers:
-    builder:
-      name: builder
+    cray-ipxe:
+      name: cray-ipxe
       image:
         repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
       command:
@@ -167,21 +168,22 @@ deploymentDefaults:
   global:
     chart:
       name: cms-ipxe
+  initContainers: []
   kafkaCluster:
     enabled: False
 
 builderDefaults:
   containers:
-    builder:
+    cray-ipxe:
       name: cray-ipxe
 
 builders:
   aarch-64:
     Values:
-      nameOverride: cray-ipxe-aarch64
-      fullnameOverride: cray-ipxe-aarch64
+      nameOverride: cray-ipxe-aarch64-builder
+      fullnameOverride: cray-ipxe-aarch64-builder
       containers:
-        builder:
+        cray-ipxe:
           command:
             - python3
             - "-m"
