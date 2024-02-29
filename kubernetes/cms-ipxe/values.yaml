@@ -184,5 +184,3 @@ post_upgrade:
 
 cray-service:
   type: None
-
-priorityClassName: csm-high-priority-service
