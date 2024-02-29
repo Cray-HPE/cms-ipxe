@@ -1,7 +1,7 @@
 {{/*
 MIT License
 
-(C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+(C) Copyright 2021-2024 Hewlett Packard Enterprise Development LP
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -29,21 +29,10 @@ metadata:
     app.kubernetes.io/name: {{ .Values.ipxe.name }}
 data:
   settings.yaml: |
-    # Global build options
-    cray_ipxe_token_host: {{ .Values.ipxe.api_gw }}
-    cray_ipxe_token_min_remaining_valid_time: {{ .Values.ipxe.token_min_remaining_valid_time }}
-    cray_ipxe_build_with_cert: {{ .Values.ipxe.build_with_cert }}
-    cray_ipxe_build_service_log_level : {{ .Values.ipxe.build_service_log_level }}
-    cray_ipxe_build_kind: {{ .Values.ipxe.build_kind }}
-
-    # x86_64 build options
     cray_ipxe_build_x86: {{ .Values.ipxe.build_x86 }}
+    cray_ipxe_build_bss: {{ .Values.ipxe.build_bss }}
+    cray_ipxe_build_shell: {{ .Values.ipxe.build_shell }}
+    cray_ipxe_build_with_cert: {{ .Values.ipxe.build_with_cert }}
+    cray_ipxe_token_host: {{ .Values.ipxe.api_gw }}
     cray_ipxe_binary_name: {{ .Values.ipxe.cray_ipxe_binary_name }}
-    cray_ipxe_debug_enabled: {{ .Values.ipxe.build_x86_debug }}
     cray_ipxe_debug_binary_name: {{ .Values.ipxe.cray_ipxe_debug_binary_name }}
-
-    # aarch64 build options
-    cray_ipxe_aarch64_enabled: {{ .Values.ipxe.build_aarch64 }}
-    cray_ipxe_aarch64_binary_name: {{ .Values.ipxe.cray_ipxe_aarch64_binary_name }}
-    cray_ipxe_aarch64_debug_enabled : {{ .Values.ipxe.build_aarch64_debug }}
-    cray_ipxe_aarch64_debug_binary_name: {{ .Values.ipxe.cray_ipxe_aarch64_debug_binary_name }}

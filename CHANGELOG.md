@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [1.11.7] - 2024-02-29
+
+Reverted most of the content from [1.11.2] through [1.11.6]. Specifically,
+the content is now equivalent to [1.11.1] plus:
+
+### Changed
+- Spelling corrections.
+- Enabled building of unstable artifacts
+- Updated header of update_versions.conf to reflect new tool options
+- Disabled concurrent Jenkins builds on same branch/commit
+- Added build timeout to avoid hung builds
+
+### Fixed
+- Update Chart with correct image and chart version strings during builds.
+
+### Dependencies
+- Moved to `PyYAML` `6.0.1` to prevent build issue.
+
 ## [1.11.6] - 2023-10-26
 ### Changed
 - Fixed a typecasting bug encountered during evaluation of token timeout
@@ -34,7 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Correct mismatch in aarch64's referenced configmap (previously was still referencing x86's version)
 ### Removed
 - Deprecated configuration variables with no viable or used method for configuration
-
 
 ## [1.11.2] - 2023-04-14
 
