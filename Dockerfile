@@ -31,6 +31,7 @@
 # changes.
 ARG Upstream=artifactory.algol60.net
 ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
+ARG IpxeTag=3.0.0
 ARG Stable=stable
 FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
 RUN mkdir /app
