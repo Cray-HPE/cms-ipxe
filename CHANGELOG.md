@@ -15,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refactored liveness code to account for unified source of liveness information
 - Threaded liveness probe heartbeat to detect failed containers
 - Refactored crayipxe/service.py into new multitarchitecture entrant builds into crayipxe/builder.py
-- Update the liveness thread to terminate when the main build thread terminates
 ### Removed
 - Deprecated configuration variables with no viable or used method for configuration
 
