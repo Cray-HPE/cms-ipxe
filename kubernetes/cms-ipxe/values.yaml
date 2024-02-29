@@ -159,6 +159,10 @@ post_upgrade:
   image:
     repository: artifactory.algol60.net/csm-docker/S-T-A-B-L-E/cray-bss-ipxe
 
+builderDefaults:
+  containers:
+
+
 builders:
   aarch-64:
     Values:
