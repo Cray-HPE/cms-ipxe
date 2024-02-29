@@ -464,11 +464,6 @@ def main():
         # ipxe script setting
         bss_script_raw = api_instance.read_namespaced_config_map('cray-ipxe-bss-ipxe', 'services')
         bss_script_new = bss_script_raw.data['bss.ipxe']
-
-        # ipxe binary type and architecture settings...
-        build_arch = settings.get('cray_ipxe_build_arch', 'x86_64')
-        build_kind = settings.get('cray_ipxe_build_kind', 'efi')
-
         if bss_script_new != bss_script:
             bss_script_changed = True
             bss_script = bss_script_new
@@ -485,8 +480,7 @@ def main():
             new_ipxe_binary = create_binaries(api_instance, ipxe_binary_name, bss_script, cert=public_cert,
                                               bearer_token=bearer_token,
                                               ipxe_build_debug=ipxe_build_debug,
-                                              ipxe_build_debug_level=cray_ipxe_debug_level,
-                                              arch=build_arch, kind=build_kind)
+                                              ipxe_build_debug_level=cray_ipxe_debug_level)
 
             if not ipxe_binary == new_ipxe_binary:
                 if ipxe_binary and os.path.exists(ipxe_binary):
@@ -520,8 +514,7 @@ def main():
                                                     cert=public_cert,
                                                     bearer_token=bearer_token,
                                                     ipxe_build_debug=ipxe_build_debug,
-                                                    ipxe_build_debug_level=cray_ipxe_debug_level,
-                                                    arch=build_arch, kind=build_kind)
+                                                    ipxe_build_debug_level=cray_ipxe_debug_level)
 
             # The upgrade to cms-ipxe 1.10.0 changed the default name, potentially leaving an old file
             # This file still contains a valid token and should be cleaned up if not in use
