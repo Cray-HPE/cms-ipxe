@@ -32,7 +32,8 @@
 ARG Upstream=artifactory.algol60.net
 ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
 ARG Stable=stable
-FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
+# FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
+FROM artifactory.algol60.net/csm-docker/unstable/cray-tpsw-ipxe:3.1.0-rebase.1_3940110 as base
 RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt requirements_test.txt constraints.txt /app/
