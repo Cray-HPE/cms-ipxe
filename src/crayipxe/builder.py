@@ -34,6 +34,7 @@ from urllib.parse import urlparse
 from socket import gaierror
 
 from crayipxe import IPXE_BUILD_DIR
+from crayipxe import IPXE_CONFIG
 from crayipxe.k8s_client import api_instance, client
 from crayipxe.tokens import fetch_token, token_expiring_soon, TOKEN_HOST
 from crayipxe.liveness.ipxe_timestamp import ipxeTimestamp, LIVENESS_PATH, liveliness_heartbeat
@@ -377,6 +378,7 @@ class BinaryBuilder(object):
             build_command.append('CERT=%s' % cert_path_filename)
             build_command.append('TRUST=%s' % cert_path_filename)
         build_command.append('EMBED=%s' % os.path.basename(self.bss_script_path))
+        build_command.append(f'CONFIG={IPXE_CONFIG}')
         s3_host = self.s3_host
         if s3_host:
             build_command.append('S3_HOST=%s' % s3_host)
@@ -404,6 +406,7 @@ class BinaryBuilder(object):
             debug_command.append('CERT=%s' % cert_path_filename)
             debug_command.append('TRUST=%s' % cert_path_filename)
         debug_command.append('EMBED=%s' % os.path.basename(self.debug_script_path))
+        debug_command.append(f'CONFIG={IPXE_CONFIG}')
         s3_host = self.s3_host
         if s3_host:
             debug_command.append('S3_HOST=%s' % s3_host)

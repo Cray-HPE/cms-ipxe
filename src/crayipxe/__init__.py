@@ -28,6 +28,10 @@ import logging
 LOGGER = logging.getLogger(__name__)
 IPXE_BUILD_DIR = '/ipxe'
 
+# Use the HPC iPXE configuration.
+# https://github.com/Cray-HPE/ipxe/tree/master/src/config/hpc
+IPXE_CONFIG = 'hpc'
+
 # Format logs and set the requested log level.
 log_format = "%(asctime)-15s - %(levelname)-7s - %(name)s - %(message)s"
 requested_log_level = os.environ.get('LOG_LEVEL', 'INFO')
