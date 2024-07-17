@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2024-07-17
+### Fixed
+- MTL-2104 - refresh iPXE codebase.
+
+### Dependencies
+- Bump `tj-actions/changed-files` from 42 to 44 ([#93](https://github.com/Cray-HPE/cms-ipxe/pull/93), [#94](https://github.com/Cray-HPE/cms-ipxe/pull/94))
+
 ## [1.12.1] - 2024-02-29
 
 ### Fixed
