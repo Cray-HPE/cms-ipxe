@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2019-2022 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2019-2022, 2024 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -27,6 +27,10 @@ import logging
 
 LOGGER = logging.getLogger(__name__)
 IPXE_BUILD_DIR = '/ipxe'
+
+# Use the HPC iPXE configuration.
+# https://github.com/Cray-HPE/ipxe/tree/master/src/config/hpc
+IPXE_CONFIG = 'hpc'
 
 # Format logs and set the requested log level.
 log_format = "%(asctime)-15s - %(levelname)-7s - %(name)s - %(message)s"
