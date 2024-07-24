@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.1] - 2024-07-24
+### Dependencies
+- Bump `certifi` and `PyJWT` dependency versions to resolve CVEs
+
 ## [1.13.0] - 2024-07-17
 ### Fixed
 - MTL-2104 - refresh iPXE codebase.
