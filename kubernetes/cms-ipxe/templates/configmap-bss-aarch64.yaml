@@ -59,6 +59,12 @@ data:
     # Iterate through all of the available network interfaces, starting with nic_index_vip.
 
     :dhcpstart
+    
+    # Shut down all interfaces and open them as needed. Sternly prevents iPXE from
+
+    # making bad decisions selecting which interface traffic egresses.
+
+    ifclose
 
     set vidx:int8 {{ .Values.ipxe.nic_index_vip }}
 
@@ -76,7 +82,7 @@ data:
 
       ifopen net${vidx} || echo Failed to open net${vidx}
 
-      ifconf -c dhcp net${vidx} && goto configured || ifclose net${vidx}
+      ifconf -c dhcp --timeout {{ .Values.ipxe.dhcp_timeout }} net${vidx} && goto configured || ifclose net${vidx}
     
       # Increment our index and continue.
 

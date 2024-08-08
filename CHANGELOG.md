@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Makes use of the new `--timeout` parameter for `ifconf -c dhcp` to stretch the window of time iPXE waits for packets to route when an MLAG is in play. This flag is only available after the recent adoption of newer iPXE source from (MTL-2104)[https://jira-pro.it.hpe.com:8443/browse/MTL-2104).
+
 ## [1.13.1] - 2024-07-24
 ### Dependencies
 - Bump `certifi` and `PyJWT` dependency versions to resolve CVEs
