@@ -123,10 +123,13 @@ ipxe:
   # If a token is going to expire within this number of seconds, update it.
   token_min_remaining_valid_time: 1800
 
+
   # The following are options that pertain to the build environment; checking in
   # values here change the resultant number of build environments that are created
   # as a response to updates or changes in the environment.
   chain_timeout: 10000
+
+  dhcp_timeout: 20000
 
   # The following are options that pertain to the resultant interfaces that are
   # allowed as booting devices. By default, the resultant ipxe binary will instruct
