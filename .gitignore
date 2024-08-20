@@ -5,3 +5,4 @@
 /testdeploy.retry
 kubernetes/.packaged/
 **/*__pycache__*
+*.lock
