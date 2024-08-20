@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- updated cray-ipxe-tpsw docker (ipxe-tpsw-clone repo) version
+
 ## [1.14.0] - 2024-08-20
 ### Changed
 
