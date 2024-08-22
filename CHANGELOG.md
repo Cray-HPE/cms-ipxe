@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Dependencies
+- Bump `tj-actions/changed-files` from 44 to 45 ([#107](https://github.com/Cray-HPE/cms-ipxe/pull/107))
+
 ## [1.14.1] - 2024-08-20
 
 - updated cray-ipxe-tpsw docker (ipxe-tpsw-clone repo) version
