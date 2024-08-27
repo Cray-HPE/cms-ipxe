@@ -7,23 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+### Dependencies
+- CSM 1.6 moved to Kubernetes 1.24, so use client v24.x to ensure compatability
 
 ## [1.14.1] - 2024-08-20
 
+### Changed
 - updated cray-ipxe-tpsw docker (ipxe-tpsw-clone repo) version
 
 ## [1.14.0] - 2024-08-20
-### Changed
 
-- Makes use of the new `--timeout` parameter for `ifconf -c dhcp` to stretch the window of time iPXE waits for packets to route when an MLAG is in play. This flag is only available after the recent adoption of newer iPXE source from (MTL-2104)[https://jira-pro.it.hpe.com:8443/browse/MTL-2104).
+### Changed
+- Makes use of the new `--timeout` parameter for `ifconf -c dhcp` to stretch the window of time iPXE waits for packets to route when an MLAG is in play. This flag is only available after the recent adoption of newer iPXE source from [MTL-2104](https://jira-pro.it.hpe.com:8443/browse/MTL-2104).
 - Updated `.gitignore` to ignore `Chart.lock` files created when running chart commands locally.
 
 ## [1.13.1] - 2024-07-24
+
 ### Dependencies
 - Bump `certifi` and `PyJWT` dependency versions to resolve CVEs
 
 ## [1.13.0] - 2024-07-17
+
 ### Fixed
 - MTL-2104 - refresh iPXE codebase.
 
