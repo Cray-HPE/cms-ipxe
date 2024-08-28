@@ -71,7 +71,7 @@ class BinaryBuilder(object):
 
     def __init__(self):
         self._build_options = ['httpcore', 'x509', 'efi_time']
-        self._build_debug_options = ['httpcore:2', 'x509:2', 'efi_time']
+        self._build_debug_options = ['httpcore:7', 'x509:7', 'efi_time:7', 'cert:7', 'http:7', 'crypto:7', 'entropy:7', 'tls:7']
 
         # Options and structures unique to the global configmap
         self.global_settings_configmap_name = 'cray-ipxe-settings'
