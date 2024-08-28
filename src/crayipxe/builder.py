@@ -405,7 +405,7 @@ class BinaryBuilder(object):
             cert_path_filename = os.path.basename(self.cert_path)
             debug_command.append('CERT=%s' % cert_path_filename)
             debug_command.append('TRUST=%s' % cert_path_filename)
-        debug_command.append('EMBED=%s' % os.path.basename(self.debug_script_path))
+        debug_command.append('EMBED=%s' % os.path.basename(self.bss_script_path))
         debug_command.append(f'CONFIG={IPXE_CONFIG}')
         s3_host = self.s3_host
         if s3_host:
