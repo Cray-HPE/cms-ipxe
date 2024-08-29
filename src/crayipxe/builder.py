@@ -70,9 +70,6 @@ class BinaryBuilder(object):
     TIME_BETWEEN_BUILDCHECKS = 60
 
     def __init__(self):
-        self._build_options = ['httpcore', 'x509', 'efi_time']
-        self._build_debug_options = ['httpcore:7', 'x509:7', 'efi_time:7', 'cert:7', 'http:7', 'crypto:7', 'entropy:7', 'tls:7']
-
         # Options and structures unique to the global configmap
         self.global_settings_configmap_name = 'cray-ipxe-settings'
         self._global_settings = None
@@ -104,12 +101,17 @@ class BinaryBuilder(object):
         self.recreation_necessary = True
 
     @property
-    def build_options(self):
-        return ','.join(self._build_options)
+    def build_options(self) -> str:
+        default_build_options = ['httpcore', 'x509', 'efi_time']
+        build_options = self.global_settings.get(f"cray_ipxe_build_options", default_build_options)
+        return ','.join(build_options)
 
     @property
-    def build_debug_options(self):
-        return ','.join(self._build_debug_options)
+    def build_debug_options(self) -> str:
+        #default_build_options = ['httpcore:2', 'x509:2', 'efi_time']
+        default_build_options = ['httpcore:7', 'x509:7', 'efi_time:7', 'cert:7', 'http:7', 'crypto:7', 'entropy:7', 'tls:7']
+        build_options = self.global_settings.get(f"cray_ipxe_build_options_debug", default_build_options)
+        return ','.join(build_options)
 
     @property
     def global_settings(self):
@@ -130,7 +132,7 @@ class BinaryBuilder(object):
             self._global_settings_timestamp = time.time()
         if local_settings != self._global_settings:
             # Either this is the first time we've accessed the global settings, or the settings have changed.
-            # in either case, an update to this value indicates we should rebuild to pick up the new values.
+            # In either case, an update to this value indicates we should rebuild to pick up the new values.
             LOGGER.info("New global settings cached; rebuild is possible if enabled.")
             self.recreation_necessary = True
         return self._global_settings
@@ -453,13 +455,14 @@ class BinaryBuilder(object):
             LOGGER.warning("Unknown log level '%s'; defaulting to DEBUG.")
 
     def build_binary(self, command, debug=False):
-        if not debug:
-            LOGGER.info("Preparing to build new %s binary.", self.ARCH)
+        if debug:
+            binary_name = f"DEBUG {self.ARCH} binary"
         else:
-            LOGGER.info("Preparing to build new %s DEBUG binary.", self.ARCH)
+            binary_name = f"{self.ARCH} binary"
+        LOGGER.info(f"Preparing to build new {binary_name}.")
         completed_process = subprocess.run(command)
         if completed_process.returncode != 0:
-            LOGGER.error(f"Building {self.ARCH} binary failed - Return code: {completed_process.returncode} Error: {completed_process.stderr}" )
+            LOGGER.error(f"Building {binary_name} failed - Return code: {completed_process.returncode} Error: {completed_process.stderr}" )
             completed_process.check_returncode()
 
     def publish_binary(self):
