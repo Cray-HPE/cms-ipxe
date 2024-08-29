@@ -457,7 +457,10 @@ class BinaryBuilder(object):
             LOGGER.info("Preparing to build new %s binary.", self.ARCH)
         else:
             LOGGER.info("Preparing to build new %s DEBUG binary.", self.ARCH)
-        subprocess.check_call(command)
+        completed_process = subprocess.run(command)
+        if completed_process.returncode != 0:
+            LOGGER.error(f"Building {self.ARCH} binary failed - Return code: {completed_process.returncode} Error: {completed_process.stderr}" )
+            completed_process.check_returncode()
 
     def publish_binary(self):
         shutil.move(self.built_binary_abs_path, self.destination_abs_path)
