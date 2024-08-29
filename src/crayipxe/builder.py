@@ -108,9 +108,10 @@ class BinaryBuilder(object):
 
     @property
     def build_debug_options(self) -> str:
-        #default_build_options = ['httpcore:2', 'x509:2', 'efi_time']
-        default_build_options = ['httpcore:7', 'x509:7', 'efi_time:7', 'cert:7', 'http:7', 'crypto:7', 'entropy:7', 'tls:7']
+        default_build_options = ['httpcore:2', 'x509:2', 'efi_time']
+        #default_build_options = ['httpcore:7', 'x509:7', 'efi_time:7', 'cert:7', 'http:7', 'crypto:7', 'entropy:7', 'tls:7']
         build_options = self.global_settings.get(f"cray_ipxe_build_options_debug", default_build_options)
+        LOGGER.debug(f"Build options debug: {build_options}")
         return ','.join(build_options)
 
     @property
