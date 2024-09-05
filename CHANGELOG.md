@@ -9,9 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Dependencies
 - CSM 1.6 moved to Kubernetes 1.24, so use client v24.x to ensure compatability
-
-### Dependencies
 - Bump `tj-actions/changed-files` from 44 to 45 ([#107](https://github.com/Cray-HPE/cms-ipxe/pull/107))
+- Move to `cray-services` base chart version v11.0
 
 ## [1.14.1] - 2024-08-20
 
