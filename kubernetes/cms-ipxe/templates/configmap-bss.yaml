@@ -42,6 +42,10 @@ data:
 
     set ceiling:int8 {{ .Values.ipxe.bss_ceiling }}
 
+    # Lowering maxattempts to 3 to ameliorate CAST-36348
+
+    set maxattempts:int16 3 && echo Lowering maximum attempts to ${maxattempts} due to CAST-36348.
+
     :start
 
     inc attempt
@@ -59,7 +63,7 @@ data:
     # Iterate through all of the available network interfaces, starting with nic_index_vip.
 
     :dhcpstart
-    
+
     # Shut down all interfaces and open them as needed. Sternly prevents iPXE from
 
     # making bad decisions selecting which interface traffic egresses.
@@ -83,12 +87,12 @@ data:
       ifopen net${vidx} || echo Failed to open net${vidx}
 
       ifconf -c dhcp --timeout {{ .Values.ipxe.dhcp_timeout }} net${vidx} && goto configured || ifclose net${vidx}
-    
+
       # Increment our index and continue.
 
       # The VIP index indicates which network interface to try first, before iterating through the
 
-      # remainder of the interfaces starting with interface zero. For example, a VIP index of 2 
+      # remainder of the interfaces starting with interface zero. For example, a VIP index of 2
 
       # would start with 2 and then proceed through net0, net1, net3, netX before wrapping around
 
@@ -97,7 +101,7 @@ data:
       # If our index is 0, increment and continue. Skip all other funny business.
 
       iseq ${vidx} 0 && inc vidx && goto dhcpcheck ||
-    
+
       # Else, if our current index is 1 less than the starting index, then set the index to 1 after the starting index.
 
       iseq ${vidx} {{ sub .Values.ipxe.nic_index_vip 1 }} && set vidx:int8 {{ .Values.ipxe.nic_index_vip | add1 }} && goto dhcpcheck ||
@@ -114,7 +118,7 @@ data:
 
     echo net${vidx} IPv4 lease: ${net${vidx}/ip} MAC: ${net${vidx}/mac}
 
-    chain --timeout {{ $root.Values.ipxe.chain_timeout }} http{{ if $root.Values.ipxe.build_with_cert }}s{{ end }}://{{ $root.Values.ipxe.api_gw }}/apis/bss/boot/v1/bootscript?mac=${net${vidx}/mac} || echo Failed to retrieve next chain from Boot Script Service over net${vidx} (http{{ if $root.Values.ipxe.build_with_cert }}s{{ end }}://{{ $root.Values.ipxe.api_gw }}/apis/bss/boot/v1/bootscript?mac=${net${vidx}/mac}) && goto start 
+    chain --timeout {{ $root.Values.ipxe.chain_timeout }} http{{ if $root.Values.ipxe.build_with_cert }}s{{ end }}://{{ $root.Values.ipxe.api_gw }}/apis/bss/boot/v1/bootscript?mac=${net${vidx}/mac} || echo Failed to retrieve next chain from Boot Script Service over net${vidx} (http{{ if $root.Values.ipxe.build_with_cert }}s{{ end }}://{{ $root.Values.ipxe.api_gw }}/apis/bss/boot/v1/bootscript?mac=${net${vidx}/mac}) && goto start
 
     ifclose net${vidx} || echo No routes to drop.
 
@@ -131,6 +135,8 @@ data:
     :debug_retry
 
     echo IPXE failed to retrieve next chain after ${maxattempts} attempts or was interrupted.
+
+    echo Rebooting for CAST-36348 && reboot
 
     goto debug
 
