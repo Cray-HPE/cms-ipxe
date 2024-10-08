@@ -136,6 +136,15 @@ class BinaryBuilder(object):
         return self._global_settings
 
     @property
+    def global_additional_build_options(self):
+        """
+        A list of strings that correspond to MAKE targets for building. These are typically user supplied values that
+        affect the overall build of all ipxe flavors.
+        :return: A list of build options to append at build time.
+        """
+        return self.global_settings.get('global_additional_build_options', '').split(',')
+
+    @property
     def build_kind(self):
         """
         A string value representing the overall kind of artifact this builder produces. Most typically, this is 'ipxe',
@@ -385,6 +394,8 @@ class BinaryBuilder(object):
         build_command.append('BEARER_TOKEN=%s' % self.bearer_token)
         LOGGER.debug("Build command generated as: [%s]" % ' '.join(build_command[:-1]))
         LOGGER.debug("BEARER_TOKEN=<omitted> for reasons of security.")
+        if self.global_additional_build_options:
+            build_command.extend(self.global_additional_build_options)
         return build_command
 
     @property
