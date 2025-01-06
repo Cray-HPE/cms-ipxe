@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2023-2024 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2023-2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -142,7 +142,9 @@ class BinaryBuilder(object):
         affect the overall build of all ipxe flavors.
         :return: A list of build options to append at build time.
         """
-        return self.global_settings.get('global_additional_build_options', '').split(',')
+        return [option.strip()
+                for option in self.global_settings.get('global_additional_build_options', '').strip().split(',')
+                if option.strip()]
 
     @property
     def build_kind(self):
