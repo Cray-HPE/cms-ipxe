@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2024 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -166,6 +166,13 @@ ipxe:
   # allows the builders to change effective behavior for the kinds of artifacts that are eventually built out to further
   # support kpxe/undionly variants.
   build_kind: ipxe
+
+  # This allows injection of new custom build options for ipxe. This is a GLOBAL SETTING, so every build will have these
+  # values included at build time. The format of this value is a comma delimited string. By default, this string is
+  # empty. Changing this value to anything that is not supported by the ipxe build makefile will likely break ALL
+  # builds. Only change this value if you have a solid understanding of the internals of the ipxe build chain, as the
+  # contents of this setting are passed in to the build process as is.
+  global_additional_build_options: ""
 
   # These options are specific to x86_64 ipxe builds
   build_x86: true

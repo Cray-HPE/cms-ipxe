@@ -2,7 +2,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2023-2024 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2023-2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -134,6 +134,17 @@ class BinaryBuilder(object):
             LOGGER.info("New global settings cached; rebuild is possible if enabled.")
             self.recreation_necessary = True
         return self._global_settings
+
+    @property
+    def global_additional_build_options(self):
+        """
+        A list of strings that correspond to MAKE targets for building. These are typically user supplied values that
+        affect the overall build of all ipxe flavors.
+        :return: A list of build options to append at build time.
+        """
+        return [option.strip()
+                for option in self.global_settings.get('global_additional_build_options', '').strip().split(',')
+                if option.strip()]
 
     @property
     def build_kind(self):
@@ -385,6 +396,8 @@ class BinaryBuilder(object):
         build_command.append('BEARER_TOKEN=%s' % self.bearer_token)
         LOGGER.debug("Build command generated as: [%s]" % ' '.join(build_command[:-1]))
         LOGGER.debug("BEARER_TOKEN=<omitted> for reasons of security.")
+        if self.global_additional_build_options:
+            build_command.extend(self.global_additional_build_options)
         return build_command
 
     @property
