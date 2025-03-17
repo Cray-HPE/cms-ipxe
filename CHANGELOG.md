@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Dependencies
+- Bump `tj-actions/changed-files` from 45 to 46 ([#118](https://github.com/Cray-HPE/cms-ipxe/pull/118))
+
 ## [1.15.2] - 2025-1-10
 ### Fixed
 - Assigning unique name to cms-ipxe job to avoid following upgrade issue:
