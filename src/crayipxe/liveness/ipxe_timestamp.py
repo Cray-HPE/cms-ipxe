@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2020-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2020-2023, 2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -37,7 +37,7 @@ import time
 LOGGER = logging.getLogger(__name__)
 LIVENESS_PATH = '/tmp/ipxe_build_in_progress'
 
-MAIN_THREAD = threading.currentThread()
+MAIN_THREAD = threading.current_thread()
 
 class BaseipxeTimestampException(BaseException):
     pass
@@ -292,7 +292,7 @@ def liveliness_heartbeat(path):
     """
     timestamp = ipxeTimestamp.byref(path)
     while True:
-        if not MAIN_THREAD.isAlive():
+        if not MAIN_THREAD.is_alive():
             # All hope abandon ye who enter here
             return
         timestamp.refresh()

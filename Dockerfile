@@ -29,7 +29,6 @@
 # for downloading ipxe binaries from a secure location. The ipxe binaries
 # themselves need to be dynamically recreated whenever the public CA cert
 # changes.
-
 ARG Upstream=artifactory.algol60.net
 ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
 ARG Stable=stable
@@ -37,29 +36,29 @@ FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
 
 RUN mkdir /app
 WORKDIR /app
-
 COPY requirements.txt requirements_test.txt constraints.txt /app/
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl git make build-essential libssl-dev zlib1g-dev \
-    libbz2-dev libreadline-dev libsqlite3-dev wget llvm \
-    libncurses5-dev libncursesw5-dev xz-utils tk-dev \
-    libffi-dev liblzma-dev python3-openssl coreutils ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt -y update && \
+    apt -y install \
+      build-essential \
+      python3-dev \
+      python3-venv \
+      python3-pip \ 
+      python3-setuptools \
+      python3-wheel \
+      libyaml-dev \
+      openssl \
+      coreutils
 
-ENV PYENV_ROOT="/opt/pyenv"
-ENV PATH="$PYENV_ROOT/bin:$PYENV_ROOT/shims:$PATH"
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade wheel setuptools cython build && \
+    /opt/venv/bin/pip install --no-cache-dir -r /app/requirements.txt
 
-RUN curl https://pyenv.run | bash && \
-    /opt/pyenv/bin/pyenv install 3.8.10 && \
-    /opt/pyenv/bin/pyenv global 3.8.10 && \
-    ln -sf /opt/pyenv/versions/3.8.10/bin/python3 /usr/local/bin/python3 && \
-    python3 -m ensurepip && python3 -m pip install --upgrade pip
+ENV PATH="/opt/venv/bin:${PATH}"
 
-RUN chmod -R a+rX /opt/pyenv
-RUN python3 -m pip install --no-cache-dir -r /app/requirements.txt
 RUN echo 'alias ll="ls -l"' > ~/.bashrc
 RUN chown 65534:65534 -R /ipxe
-COPY src/crayipxe /app/crayipxe
+COPY /src/crayipxe /app/crayipxe
 ENTRYPOINT ["python3", "-m", "crayipxe.builds.x86-64"]
 USER 65534:65534
