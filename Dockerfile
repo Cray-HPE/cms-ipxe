@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# (C) Copyright 2021-2023 Hewlett Packard Enterprise Development LP
+# (C) Copyright 2021-2023, 2025 Hewlett Packard Enterprise Development LP
 #
 # Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
@@ -33,17 +33,32 @@ ARG Upstream=artifactory.algol60.net
 ARG IpxeTag=@CRAY-TPSW-IPXE-VERSION@
 ARG Stable=stable
 FROM $Upstream/csm-docker/$Stable/cray-tpsw-ipxe:$IpxeTag as base
+
 RUN mkdir /app
 WORKDIR /app
 COPY requirements.txt requirements_test.txt constraints.txt /app/
+
 RUN apt -y update && \
     apt -y install \
+      build-essential \
       python3-dev \
-      python3-pip openssl coreutils && \
-    python3 -m pip install --upgrade pip && \
-    python3 -m pip install --no-cache-dir -r /app/requirements.txt
+      python3-venv \
+      python3-pip \ 
+      python3-setuptools \
+      python3-wheel \
+      libyaml-dev \
+      openssl \
+      coreutils
+
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir --upgrade wheel setuptools cython build && \
+    /opt/venv/bin/pip install --no-cache-dir -r /app/requirements.txt
+
+ENV PATH="/opt/venv/bin:${PATH}"
+
 RUN echo 'alias ll="ls -l"' > ~/.bashrc
 RUN chown 65534:65534 -R /ipxe
 COPY /src/crayipxe /app/crayipxe
-ENTRYPOINT python3 -m crayipxe.builds.x86-64
+ENTRYPOINT ["python3", "-m", "crayipxe.builds.x86-64"]
 USER 65534:65534
