@@ -7,18 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Dependencies
-
-- Bump `dangoslen/dependabot-changelog-helper` from 3 to 4 ([#117](https://github.com/Cray-HPE/cms-ipxe/pull/117))
-
 ## [1.16.0] - 2025-05-27
-
 ### Dependencies
 - Bump `dangoslen/dependabot-changelog-helper` from 3 to 4 ([#117](https://github.com/Cray-HPE/cms-ipxe/pull/117))
 
 ### Updated
 - updated cray-ipxe-tpsw version to v4.2.0
-
 
 ## [1.15.2] - 2025-1-10
 ### Fixed
