@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.1] - 2025-06-06
+### Fixed
+- CASMCMS-9454 - add pod level security context so PVC's are mounted with the correct owner.
+
+### Dependencies
+- Bumped cray-services base chart minimum version to 12.0.0
+
 ## [1.16.0] - 2025-05-27
 ### Dependencies
 - Bump `dangoslen/dependabot-changelog-helper` from 3 to 4 ([#117](https://github.com/Cray-HPE/cms-ipxe/pull/117))
