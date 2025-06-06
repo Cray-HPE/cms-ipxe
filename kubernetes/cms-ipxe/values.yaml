@@ -45,6 +45,10 @@ deploymentDefaults:
 
 builderDefaults:
   serviceAccountName: cray-ipxe
+  securityContext:
+    runAsUser: 65534
+    runAsGroup: 65534
+    fsGroup: 65534
   containers:
     builder:
       name: cray-ipxe
