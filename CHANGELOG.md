@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Include process and thread IDs in log messages
 
 ### Dependencies
-- Bump `actions/checkout` from 4 to 5 ([#125](https://github.com/Cray-HPE/cms-ipxe/pull/125))
+- Bump `actions/checkout` from 4 to 6 ([#125](https://github.com/Cray-HPE/cms-ipxe/pull/125), [#127](https://github.com/Cray-HPE/cms-ipxe/pull/127))
 
 ## [1.16.1] - 2025-06-06
 ### Fixed
