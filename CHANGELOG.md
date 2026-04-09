@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Dependencies
 - Bump `actions/checkout` from 4 to 6 ([#125](https://github.com/Cray-HPE/cms-ipxe/pull/125), [#127](https://github.com/Cray-HPE/cms-ipxe/pull/127))
 - Bump `stefanzweifel/git-auto-commit-action` from 5 to 7 ([#126](https://github.com/Cray-HPE/cms-ipxe/pull/126))
+- CASMCMS-9642: Update dependencies to resolve CVEs
+  - Bump `urllib3` from `2.4.0` to `2.6.3` to resolve:
+    - https://snyk.io/vuln/SNYK-PYTHON-URLLIB3-14192442
+    - https://snyk.io/vuln/SNYK-PYTHON-URLLIB3-14192443
+    - https://snyk.io/vuln/SNYK-PYTHON-URLLIB3-14896210
+  - Bump `PyJWT` from `2.10.1` to `2.12.1` to resolve https://snyk.io/vuln/SNYK-PYTHON-PYJWT-15518059
+  - Bump `pyasn1` from `0.6.1` to `0.6.3` to resolve:
+    - https://snyk.io/vuln/SNYK-PYTHON-PYASN1-15032639
+    - https://snyk.io/vuln/SNYK-PYTHON-PYASN1-15674561
 
 ## [1.16.1] - 2025-06-06
 ### Fixed

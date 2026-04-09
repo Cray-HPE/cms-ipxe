@@ -5,13 +5,13 @@ idna==3.10
 # CSM 1.7 moved to Kubernetes 1.32. Use client v32.x to ensure compatability
 kubernetes==32.0.1
 oauthlib==3.2.2
-pyasn1==0.6.1
+pyasn1==0.6.3
 pyasn1_modules==0.4.2
-PyJWT==2.10.1
+PyJWT==2.12.1
 python-dateutil==2.9.0.post0
 PyYAML==6.0.2
 requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9.1
-urllib3==2.4.0
+urllib3==2.6.3
 websocket-client==1.8.0
