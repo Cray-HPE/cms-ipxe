@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Include process and thread IDs in log messages
 
 ### Dependencies
-- Bump `actions/checkout` from 4 to 6 ([#125](https://github.com/Cray-HPE/cms-ipxe/pull/125), [#127](https://github.com/Cray-HPE/cms-ipxe/pull/127))
+- Bump `actions/checkout` from 4 to 7 ([#125](https://github.com/Cray-HPE/cms-ipxe/pull/125), [#127](https://github.com/Cray-HPE/cms-ipxe/pull/127), [#128](https://github.com/Cray-HPE/cms-ipxe/pull/128))
 - Bump `stefanzweifel/git-auto-commit-action` from 5 to 7 ([#126](https://github.com/Cray-HPE/cms-ipxe/pull/126))
 
 ## [1.16.1] - 2025-06-06
